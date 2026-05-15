@@ -1,0 +1,174 @@
+@import "bootstrap/scss/bootstrap";
+
+@font-face {
+  font-family: 'Raleway-Regular';
+  src: url('../../public/assets/fonts/Raleway-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Raleway-Medium';
+  src: url('../../public/assets/fonts/Raleway-Medium.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Raleway-SemiBold';
+  src: url('../../public/assets/fonts/Raleway-SemiBold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Raleway-Bold';
+  src: url('../../public/assets/fonts/Raleway-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'Kawaii-Stitch';
+  src: url('../../public/assets/fonts/Kawaii-Stitch.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+}
+
+*,*:before, *:after {
+  margin: 0;
+  padding: 0;
+  font-family:'Raleway', sans-serif;
+};
+
+.gradient-custom-2 {
+  background: #39a94a;
+}
+
+@media (min-width: 768px) {
+  .gradient-form {
+      height: 100vh !important;
+  }
+}
+@media (min-width: 769px) {
+  .gradient-custom-2 {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 990px) {
+  .logo {
+    width: 220px !important;
+    margin-top: 17% !important;
+    margin-bottom: 17%;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 767px) {
+  .logo {
+    width: 150px !important;
+    margin-top: 17% !important;
+    margin-bottom: 17%;
+  }
+}
+
+@media (min-width: 450px) and (max-width: 990px) {
+  .flex, 
+  .flex-col, 
+  .items-center, 
+  .gap-4 {
+    padding-left: 15%;
+    padding-right: 15%;
+  }
+}
+
+.social-buttons {
+  text-align: center;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  background-color: #f1f1f1;
+  padding: 10px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: #7e7e78;
+}
+
+.logo {
+  max-width: 110%;
+  width: 250px;
+  height: auto;
+  margin-top: 100px;
+}
+
+.titles-register {
+  margin-bottom: 10px;
+}
+
+.btn-entry {
+  font-size: 0.7rem;
+}
+
+.message-error {
+  font-size: x-small;
+  color: red;
+  font-weight: bold;
+  margin-left: -25px;
+}
+
+.message-recovery-password {
+  font-size: smaller;
+  font-weight: bold;
+  color: green;
+}
+
+body {
+  background-image: url("/public/assets/fondo-login.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+.social-button__logo {
+  width: 20px !important;
+  height: 20px !important;
+  margin-right: 10px;
+}
+
+.form-control {
+  background-color: #f1f1f1;
+  margin-top: -10px;
+  --bs-border-width: 0px;
+}
+
+.btn-primary {
+  background: #39a94a;
+  --bs-btn-bg: #39a94a;
+  --bs-btn-border-color: #39a94a;
+  --bs-btn-hover-bg: #308439;
+}
+
+.form-control:focus {
+  color: var(--bs-body-color);
+  background-color: #fff;
+  border-width: 1px;
+  border-color: #39a94a;
+  box-shadow:none;
+}
+
+.shadow-sm {
+  box-shadow: none;
+  --bs-box-shadow-sm: none;
+  --bs-box-shadow-lg: none;
+  --bs-box-shadow-inset: none;
+}
+
+.px-8 {
+  padding-right: 8%;
+  padding-left: 8%;
+}
