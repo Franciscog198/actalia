@@ -1,0 +1,9 @@
+{
+  "name": "Actalia",
+  "short_name": "Actalia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#dc2626",
+  "icons": []
+}
