@@ -7,7 +7,6 @@ use App\Models\Payment;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use App\Mail\PaymentReceivedNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -49,6 +48,17 @@ class PaymentController extends Controller
 
             /**
              * =====================================
+             * RUTA REAL PUBLIC_HTML
+             * =====================================
+             */
+            $destinationPath = base_path('../public_html/storage/' . $path);
+
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+
+            /**
+             * =====================================
              * LOCADOR
              * =====================================
              */
@@ -61,11 +71,13 @@ class PaymentController extends Controller
                 '.' .
                 $fileLocador->getClientOriginalExtension();
 
-            $storedLocador = Storage::disk('public')->putFileAs(
-                $path,
-                $fileLocador,
-                $filenameLocador
-            );
+            $fileLocador->move($destinationPath, $filenameLocador);
+
+            $storedLocador =
+                '/storage/' .
+                $path .
+                '/' .
+                $filenameLocador;
 
             /**
              * =====================================
@@ -81,23 +93,13 @@ class PaymentController extends Controller
                 '.' .
                 $fileLocatario->getClientOriginalExtension();
 
-            $storedLocatario = Storage::disk('public')->putFileAs(
-                $path,
-                $fileLocatario,
-                $filenameLocatario
-            );
+            $fileLocatario->move($destinationPath, $filenameLocatario);
 
-            /**
-             * =====================================
-             * VERIFICAR QUE EXISTAN
-             * =====================================
-             */
-            if (
-                !Storage::disk('public')->exists($storedLocador) ||
-                !Storage::disk('public')->exists($storedLocatario)
-            ) {
-                throw new \Exception('Los comprobantes no pudieron guardarse correctamente.');
-            }
+            $storedLocatario =
+                '/storage/' .
+                $path .
+                '/' .
+                $filenameLocatario;
 
             /**
              * =====================================

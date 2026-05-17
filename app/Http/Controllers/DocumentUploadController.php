@@ -79,76 +79,73 @@ class DocumentUploadController extends Controller
     }
 
     private function saveDocument($contract, $file, $documentType, $index, $request)
-    {
-        $filename = time() . '_' . $documentType . '_' . $index . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $path = "contracts/{$contract->id}/documents";
+{
+    $filename = time() . '_' . $documentType . '_' . $index . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-        // Guardar archivo
-        //$storedPath = $file->storeAs($path, $filename, 'public');
+    $path = "contracts/{$contract->id}/documents";
 
-        $storedPath = $file->storeAs($path, $filename, 'public');
+    // DATOS ANTES DEL MOVE
+    $originalFilename = $file->getClientOriginalName();
+    $fileSize = $file->getSize();
+    $mimeType = $file->getMimeType();
 
-//dd([
-//    'storedPath' => $storedPath,
-//    'exists' => Storage::disk('public')->exists($storedPath),
-//]);
-        if (!$storedPath) {
-            dd('ERROR GUARDANDO ARCHIVO');
-        }
+    // Dimensiones
+    $width = null;
+    $height = null;
 
-        // Dimensiones
-        $width = null;
-        $height = null;
+    try {
+        $imageSize = getimagesize($file->getRealPath());
 
-        try {
-            $imageSize = getimagesize($file->getRealPath());
-            $width = $imageSize[0] ?? null;
-            $height = $imageSize[1] ?? null;
-        } catch (\Exception $e) {}
+        $width = $imageSize[0] ?? null;
+        $height = $imageSize[1] ?? null;
 
-        // Thumbnail
-        $thumbnailPath = null;
-
-        //try {
-        //    $thumbnailName = 'thumb_' . $filename;
-
-        //    $image = InterventionImage::make($file)
-        //        ->fit(300, 300);
-
-        //    $image->save(storage_path("app/public/{$path}/{$thumbnailName}"));
-
-        //    $thumbnailPath = "{$path}/{$thumbnailName}";
-
-        //} catch (\Exception $e) {
-        //    \Log::warning('Thumbnail error: ' . $e->getMessage());
-        //}
-
-        // Guardar en BD
-        $doc = ContractDocument::create([
-            'contract_id' => $contract->id,
-            'user_id' => null,
-            'document_type' => $this->mapDocumentType($documentType),
-            'original_filename' => $file->getClientOriginalName(),
-            'storage_path' => $storedPath,
-            'public_url' => Storage::url($storedPath),
-            'thumbnail_path' => $thumbnailPath,
-            'file_size' => $file->getSize(),
-            'mime_type' => $file->getMimeType(),
-            'width' => $width,
-            'height' => $height,
-            'page_number' => $documentType === 'contrato_firmado' ? $index + 1 : null,
-            'order' => $index,
-            'uploaded_from' => 'mobile',
-            'ip_address' => $request->ip(),
-            'uploaded_at' => now(),
-        ]);
-        //dd($doc);
-        if (!$doc) {
-            dd('ERROR GUARDANDO EN BD');
-        }
-
-        return 1;
+    } catch (\Exception $e) {
+        \Log::warning($e->getMessage());
     }
+
+    // Ruta real
+    $destinationPath = base_path('../public_html/storage/' . $path);
+
+    // Crear carpeta
+    if (!file_exists($destinationPath)) {
+        mkdir($destinationPath, 0777, true);
+    }
+
+    // MOVER ARCHIVO
+    $file->move($destinationPath, $filename);
+
+    // Ruta BD
+    $storedPath = $path . '/' . $filename;
+
+    // Thumbnail
+    $thumbnailPath = null;
+
+    // Guardar BD
+    $doc = ContractDocument::create([
+        'contract_id' => $contract->id,
+        'user_id' => null,
+        'document_type' => $this->mapDocumentType($documentType),
+        'original_filename' => $originalFilename,
+        'storage_path' => $storedPath,
+        'public_url' => '/storage/' . $storedPath,
+        'thumbnail_path' => $thumbnailPath,
+        'file_size' => $fileSize,
+        'mime_type' => $mimeType,
+        'width' => $width,
+        'height' => $height,
+        'page_number' => $documentType === 'contrato_firmado' ? $index + 1 : null,
+        'order' => $index,
+        'uploaded_from' => 'mobile',
+        'ip_address' => $request->ip(),
+        'uploaded_at' => now(),
+    ]);
+
+    if (!$doc) {
+        dd('ERROR GUARDANDO EN BD');
+    }
+
+    return 1;
+}
 
     private function mapDocumentType($type)
     {

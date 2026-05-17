@@ -776,12 +776,25 @@
                 <div class="section-body">
                     <div class="docs-row">
                         @foreach($contract->documents as $doc)
-                            <div class="doc-card" onclick="openModal('{{ asset('storage/' . $doc->storage_path) }}')">
+
+                            <div 
+                                class="doc-card"
+                                onclick="openModal('{{ asset($doc->public_url) }}')">
+
                                 <div class="doc-thumb">
-                                    <img src="{{ asset('storage/' . ($doc->thumbnail_path ?? $doc->storage_path)) }}" alt="{{ $doc->document_type }}">
+                                
+                                    <img
+                                        src="{{ asset($doc->public_url) }}"
+                                        alt="{{ $doc->document_type }}">
+                                
                                 </div>
-                                <div class="doc-label">{{ ucfirst(str_replace('_', ' ', $doc->document_type)) }}</div>
+                            
+                                <div class="doc-label">
+                                    {{ ucfirst(str_replace('_', ' ', $doc->document_type)) }}
+                                </div>
+                            
                             </div>
+                        
                         @endforeach
                     </div>
                     <div class="tip">Tip: Toca cualquier imagen para verla en grande.</div>
@@ -790,64 +803,63 @@
             @endif
             @if($contract->payments->count() > 0)
 
-<div class="section closed">
-
-    <div class="section-head">
-        <div class="section-title">
-            <span class="section-bars"><span></span></span>
-
-            <span class="section-title-text">
-                Comprobantes de Pago
-            </span>
-        </div>
-
-        <iconify-icon
-            icon="lucide:chevron-down"
-            class="accordion-icon">
-        </iconify-icon>
-    </div>
-
-    <div class="section-body">
-
-        <div class="docs-row">
-
-            @foreach($contract->payments as $payment)
-
-                @if($payment->proof_path)
-
-                    @foreach($payment->proof_path as $role => $proof)
-
-                        <div class="doc-card"
-                             onclick="openModal('{{ asset('storage/' . $proof) }}')">
-
-                            <div class="doc-thumb">
-
-                                <img
-                                    src="{{ asset('storage/' . $proof) }}"
-                                    alt="Comprobante">
-
-                            </div>
-
-                            <div class="doc-label">
-                                {{ ucfirst($role) }}
-                            </div>
-
-                        </div>
-
-                    @endforeach
-
-                @endif
-
-            @endforeach
-
-        </div>
-
-    </div>
-
-</div>
-
-@endif
-
+            <div class="section closed">
+            
+                <div class="section-head">
+                    <div class="section-title">
+                        <span class="section-bars"><span></span></span>
+                    
+                        <span class="section-title-text">
+                            Comprobantes de Pago
+                        </span>
+                    </div>
+                
+                    <iconify-icon
+                        icon="lucide:chevron-down"
+                        class="accordion-icon">
+                    </iconify-icon>
+                </div>
+            
+                <div class="section-body">
+                
+                    <div class="docs-row">
+                    
+                        @foreach($contract->payments as $payment)
+                    
+                            @if($payment->proof_path)
+                    
+                                @foreach($payment->proof_path as $role => $proof)
+                    
+                                    <div class="doc-card"
+                                         onclick="openModal('{{ asset($proof) }}')">
+                    
+                                        <div class="doc-thumb">
+                                        
+                                            <img
+                                                src="{{ asset($proof) }}"
+                                                alt="Comprobante">
+                                        
+                                        </div>
+                                    
+                                        <div class="doc-label">
+                                            {{ ucfirst($role) }}
+                                        </div>
+                                    
+                                    </div>
+                                
+                                @endforeach
+                                
+                            @endif
+                                
+                        @endforeach
+                                
+                    </div>
+                
+                </div>
+            
+            </div>
+            
+            @endif
             <!-- Token -->
             <div class="section closed">
                 <div class="section-head">
