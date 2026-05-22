@@ -86,7 +86,11 @@ Route::get('/contract/{token}/ticket', [PaymentController::class, 'downloadTicke
 
 // Rutas de Admin CON AUTH
 //Route::middleware(['auth'])->prefix('admin')->group(function () {
-Route::middleware(['auth'])->group(function () {
+require __DIR__.'/auth.php';
+
+// Rutas públicas / auth
+//Route::middleware(['auth'])->group(function () {
+
     Route::get('/dashboard', [AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
 
@@ -100,8 +104,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('admin.contract.reject');
 
     Route::get('/profile', function () {
-    return 'Perfil';
-        })->name('profile.edit');
-});
+        return 'Perfil';
+    })->name('profile.edit');
 
-require __DIR__.'/auth.php';
+//});
+

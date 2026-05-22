@@ -445,17 +445,17 @@ class ContractController extends Controller
             // GUARDAR POLIZA
             // =====================================
     
-            if (
+        if (
                 !empty($data['poliza_documento']) &&
                 Storage::disk('public')->exists($data['poliza_documento'])
             ) {
-    
+            
                 // path temporal
                 $tempPath = $data['poliza_documento'];
-    
+            
                 // extension
                 $extension = pathinfo($tempPath, PATHINFO_EXTENSION);
-    
+            
                 // nombre final
                 $filename =
                     time() .
@@ -463,26 +463,44 @@ class ContractController extends Controller
                     uniqid() .
                     '.' .
                     $extension;
-    
+            
                 // ruta final
                 $newPath = "contracts/{$contract->id}/documents/{$filename}";
-    
-                // mover archivo
+            
+                // =====================================
+                // MOVER ARCHIVO (PRIMERO SIEMPRE)
+                // =====================================
                 Storage::disk('public')->move($tempPath, $newPath);
-    
+            
+                // =====================================
+                // PUBLIC_HTML COPY (DESPUÉS DEL MOVE)
+                // =====================================
+                $publicHtmlPath = base_path(
+                    '../public_html/app/storage/contracts/' . $contract->id . '/documents'
+                );
+            
+                if (!file_exists($publicHtmlPath)) {
+                    mkdir($publicHtmlPath, 0777, true);
+                }
+            
+                copy(
+                    Storage::disk('public')->path($newPath),
+                    $publicHtmlPath . '/' . $filename
+                );
+            
                 // path absoluto
                 $absolutePath = Storage::disk('public')->path($newPath);
-    
+            
                 // mime
                 $mimeType = Storage::disk('public')->mimeType($newPath);
-    
+            
                 // size
                 $fileSize = Storage::disk('public')->size($newPath);
-    
+            
                 // dimensiones
                 $width = null;
                 $height = null;
-    
+                
                 if (str_starts_with($mimeType, 'image/')) {
     
                     try {

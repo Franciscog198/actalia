@@ -800,7 +800,7 @@
                                     @else
                                     
                                         <img
-                                            src="{{ $doc->url }}"
+                                            src="{{ $doc->public_url }}"
                                             alt="{{ $doc->document_type }}"
                                         >
                                     
@@ -868,7 +868,7 @@
                 </div>
             </div>
             @endif
-            @if($contract->payments->count() > 0)
+            @if(optional($contract->payments)->isNotEmpty())
 
             <div class="section closed">
             
@@ -881,10 +881,7 @@
                         </span>
                     </div>
                 
-                    <iconify-icon
-                        icon="lucide:chevron-down"
-                        class="accordion-icon">
-                    </iconify-icon>
+                    <iconify-icon icon="lucide:chevron-down" class="accordion-icon"></iconify-icon>
                 </div>
             
                 <div class="section-body">
@@ -893,17 +890,45 @@
                     
                         @foreach($contract->payments as $payment)
                     
-                            @if($payment->proof_path)
-                    
+                            @if(!empty($payment->proof_path) && is_array($payment->proof_path))
+                                            
                                 @foreach($payment->proof_path as $role => $proof)
-                    
+                                            
+                                    @php
+                                        // 🔥 convertir SIEMPRE a URL válida
+                                        $url = \Illuminate\Support\Str::startsWith($proof, ['http'])
+                                            ? $proof
+                                            : asset(ltrim($proof, '/'));
+                                            
+                                        // fallback visual seguro (si luego lo necesitás)
+                                        $proofPath = public_path($proof);
+                                        $proofData = '';
+                                            
+                                        if (file_exists($proofPath)) {
+                                            $proofData = base64_encode(file_get_contents($proofPath));
+                                        }
+                                    @endphp
+                        
                                     <div class="doc-card"
-                                         onclick="openModal('{{ $proof }}')">
-                    
+                                         onclick="openModal(@js($url))">
+                                    
                                         <div class="doc-thumb">
                                         
-                                            <img src="{{ $proof }}"
-                                                alt="Comprobante">
+                                            @if($proofData)
+                                        
+                                                <img
+                                                    src="data:image/jpeg;base64,{{ $proofData }}"
+                                                    alt="Comprobante"
+                                                >
+                                        
+                                            @else
+                                        
+                                                <img
+                                                    src="{{ $url }}"
+                                                    alt="Comprobante"
+                                                >
+                                        
+                                            @endif
                                         
                                         </div>
                                     
@@ -914,9 +939,9 @@
                                     </div>
                                 
                                 @endforeach
-                                
+                                                        
                             @endif
-                                
+                                                        
                         @endforeach
                                 
                     </div>
@@ -924,7 +949,7 @@
                 </div>
             
             </div>
-            
+
             @endif
             <!-- Token -->
             <div class="section closed">
@@ -984,13 +1009,17 @@
     </div>
 
     <script>
-        function openModal(imageSrc) {
-            document.getElementById('modalImage').src = imageSrc;
-            document.getElementById('imageModal').classList.add('active');
+                function openModal(src){
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+                
+            img.src = src;
+                
+            modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeModal() {
+        function closeModal(){
             document.getElementById('imageModal').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
