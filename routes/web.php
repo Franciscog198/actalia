@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
 
+
+
 // Página de inicio
 Route::get('/', function () {
     return view('welcome');
@@ -57,28 +59,6 @@ Route::post('/contract/{token}/upload', [DocumentUploadController::class, 'store
 Route::post('/contracts/{token}/poliza', [ContractController::class, 'storePoliza'])
     ->name('contracts.poliza.store');
 
-// ==========================================
-// AUTH
-// ==========================================
-
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
-
-Route::post('/logout', function () {
-    auth()->logout();
-    return redirect('/');
-})->name('logout');
-
-//Route::get('/dashboard', function () {
-//    return view('dashboard');
-//})->name('dashboard');
-
-Route::get('/profile', function () {
-    return 'Perfil';
-})->name('profile.edit');
-
-
 // Rutas de pago
 Route::get('/contract/{token}/payment', [PaymentController::class, 'show'])->name('payment.show');
 Route::post('/contract/{token}/payment/confirm', [PaymentController::class, 'confirm'])->name('payment.confirm');
@@ -102,11 +82,11 @@ Route::get('/contract/{token}/ticket', [PaymentController::class, 'downloadTicke
 //    Route::get('/contracts/{id}/copy-link', [AdminController::class, 'copyLink'])->name('admin.contract.copyLink');
 //});    
 
-// Rutas de Admin (SIN AUTH para pruebas - luego agregar middleware)
-Route::prefix('admin')->group(function () {
+
 
 // Rutas de Admin CON AUTH
 //Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
 
@@ -118,4 +98,10 @@ Route::prefix('admin')->group(function () {
 
     Route::post('/contracts/{id}/reject', [AdminController::class, 'reject'])
         ->name('admin.contract.reject');
+
+    Route::get('/profile', function () {
+    return 'Perfil';
+        })->name('profile.edit');
 });
+
+require __DIR__.'/auth.php';

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Información de Póliza - Registrado</title>
+    <title>Información de usuarios</title>
     
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
@@ -359,6 +359,35 @@ body {
     justify-content: center;
     color: var(--accent);
 }
+
+.additional-user {
+    position: relative;
+    margin-top: 16px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--border);
+}
+
+.remove-user-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 999px;
+    background: #fee2e2;
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.remove-user-btn:hover {
+    background: #fecaca;
+    transform: scale(1.05);
+}
     </style>
 </head>
 <body>
@@ -409,7 +438,7 @@ body {
 
                         <div class="form-field">
                             <div class="form-label">Nombre completo</div>
-                            <input type="text" name="agente[name]" value="{{ old('agente.name') }}" placeholder="Nombre y apellido" class="input-real">
+                            <input type="text" name="agente[name]" value="{{ old('agente.name') }}" class="input-real">
                             @error('agente.name')
                                 <div class="error-text">{{ $message }}</div>
                             @enderror
@@ -418,14 +447,14 @@ body {
                         <div class="two-col-row">
                             <div class="form-field">
                                 <div class="form-label">Correo electrónico</div>
-                                <input type="email" name="agente[email]" value="{{ old('agente.email') }}" placeholder="correo@inmobiliaria.com" class="input-real">
+                                <input type="email" name="agente[email]" value="{{ old('agente.email') }}" class="input-real">
                                 @error('agente.email')
                                     <div class="error-text">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-field">
                                 <div class="form-label">Teléfono</div>
-                                <input type="tel" name="agente[phone]" value="{{ old('agente.phone') }}" placeholder="Cód. área + número" class="input-real">
+                                <input type="tel" name="agente[phone]" value="{{ old('agente.phone') }}" class="input-real">
                                 @error('agente.phone')
                                     <div class="error-text">{{ $message }}</div>
                                 @enderror
@@ -450,22 +479,22 @@ body {
                         <div class="form-grid locador-item">
                             <div class="form-field">
                                 <div class="form-label">Nombre completo</div>
-                                <input type="text" name="propietario[0][name]" value="{{ old('propietario.0.name') }}" placeholder="Nombre y apellido" class="input-real" required>
+                                <input type="text" name="propietario[0][name]" value="{{ old('propietario.0.name') }}"  class="input-real" required>
                             </div>
 
                             <div class="form-field">
                                 <div class="form-label">DNI / CUIT</div>
-                                <input type="text" name="propietario[0][dni_number]" value="{{ old('propietario.0.dni_number') }}" placeholder="Número de documento" class="input-real">
+                                <input type="text" name="propietario[0][dni_number]" value="{{ old('propietario.0.dni_number') }}"  class="input-real">
                             </div>
 
                             <div class="two-col-row">
                                 <div class="form-field">
                                     <div class="form-label">Correo electrónico</div>
-                                    <input type="email" name="propietario[0][email]" value="{{ old('propietario.0.email') }}" placeholder="correo@ejemplo.com" class="input-real" required>
+                                    <input type="email" name="propietario[0][email]" value="{{ old('propietario.0.email') }}" class="input-real" required>
                                 </div>
                                 <div class="form-field">
                                     <div class="form-label">Teléfono</div>
-                                    <input type="tel" name="propietario[0][phone]" value="{{ old('propietario.0.phone') }}" placeholder="351 123 4567" class="input-real" required>
+                                    <input type="tel" name="propietario[0][phone]" value="{{ old('propietario.0.phone') }}" class="input-real" required>
                                 </div>
                             </div>
                         </div>
@@ -492,22 +521,22 @@ body {
                         <div class="form-grid locatario-item">
                             <div class="form-field">
                                 <div class="form-label">Nombre completo</div>
-                                <input type="text" name="inquilino[0][name]" value="{{ old('inquilino.0.name') }}" placeholder="Nombre y apellido" class="input-real" required>
+                                <input type="text" name="inquilino[0][name]" value="{{ old('inquilino.0.name') }}"  class="input-real" required>
                             </div>
 
                             <div class="form-field">
                                 <div class="form-label">DNI / CUIT</div>
-                                <input type="text" name="inquilino[0][dni_number]" value="{{ old('inquilino.0.dni_number') }}" placeholder="Número de documento" class="input-real">
+                                <input type="text" name="inquilino[0][dni_number]" value="{{ old('inquilino.0.dni_number') }}"  class="input-real">
                             </div>
 
                             <div class="two-col-row">
                                 <div class="form-field">
                                     <div class="form-label">Correo electrónico</div>
-                                    <input type="email" name="inquilino[0][email]" value="{{ old('inquilino.0.email') }}" placeholder="correo@ejemplo.com" class="input-real" required>
+                                    <input type="email" name="inquilino[0][email]" value="{{ old('inquilino.0.email') }}" class="input-real" required>
                                 </div>
                                 <div class="form-field">
                                     <div class="form-label">Teléfono</div>
-                                    <input type="tel" name="inquilino[0][phone]" value="{{ old('inquilino.0.phone') }}" placeholder="351 123 4567" class="input-real" required>
+                                    <input type="tel" name="inquilino[0][phone]" value="{{ old('inquilino.0.phone') }}" class="input-real" required>
                                 </div>
                             </div>
                         </div>
@@ -537,69 +566,100 @@ body {
     </div>
 
     <script>
-        let locadorCount = 1;
-        let locatarioCount = 1;
+    let locadorCount = 1;
+    let locatarioCount = 1;
 
-        function agregarLocador() {
-            const container = document.getElementById('locadores-container');
-            const newLocador = document.createElement('div');
-            newLocador.className = 'form-grid locador-item additional-user';
-            newLocador.innerHTML = `
+    function eliminarBloque(button) {
+        button.closest('.additional-user').remove();
+    }
+
+    function agregarLocador() {
+        const container = document.getElementById('locadores-container');
+
+        const newLocador = document.createElement('div');
+
+        newLocador.className = 'form-grid locador-item additional-user';
+
+        newLocador.innerHTML = `
+            <button type="button"
+                class="remove-user-btn"
+                onclick="eliminarBloque(this)">
+                
+                <iconify-icon icon="lucide:x" style="font-size:16px;"></iconify-icon>
+            </button>
+
+            <div class="form-field">
+                <div class="form-label">Nombre completo</div>
+                <input type="text" name="propietario[${locadorCount}][name]" class="input-real">
+            </div>
+
+            <div class="form-field">
+                <div class="form-label">DNI / CUIT</div>
+                <input type="text" name="propietario[${locadorCount}][dni_number]" class="input-real">
+            </div>
+
+            <div class="two-col-row">
                 <div class="form-field">
-                    <div class="form-label">Nombre completo</div>
-                    <input type="text" name="propietario[${locadorCount}][name]" placeholder="Nombre y apellido" class="input-real">
-                </div>
-
-                <div class="form-field">
-                    <div class="form-label">DNI / CUIT</div>
-                    <input type="text" name="propietario[${locadorCount}][dni_number]" placeholder="Número de documento" class="input-real">
-                </div>
-
-                <div class="two-col-row">
-                    <div class="form-field">
-                        <div class="form-label">Correo electrónico</div>
-                        <input type="email" name="propietario[${locadorCount}][email]" placeholder="correo@ejemplo.com" class="input-real">
-                    </div>
-                    <div class="form-field">
-                        <div class="form-label">Teléfono</div>
-                        <input type="tel" name="propietario[${locadorCount}][phone]" placeholder="351 123 4567" class="input-real">
-                    </div>
-                </div>
-            `;
-            container.appendChild(newLocador);
-            locadorCount++;
-        }
-
-        function agregarLocatario() {
-            const container = document.getElementById('locatarios-container');
-            const newLocatario = document.createElement('div');
-            newLocatario.className = 'form-grid locatario-item additional-user';
-            newLocatario.innerHTML = `
-                <div class="form-field">
-                    <div class="form-label">Nombre completo</div>
-                    <input type="text" name="inquilino[${locatarioCount}][name]" placeholder="Nombre y apellido" class="input-real">
+                    <div class="form-label">Correo electrónico</div>
+                    <input type="email" name="propietario[${locadorCount}][email]" class="input-real">
                 </div>
 
                 <div class="form-field">
-                    <div class="form-label">DNI / CUIT</div>
-                    <input type="text" name="inquilino[${locatarioCount}][dni_number]" placeholder="Número de documento" class="input-real">
+                    <div class="form-label">Teléfono</div>
+                    <input type="tel" name="propietario[${locadorCount}][phone]" class="input-real">
+                </div>
+            </div>
+        `;
+
+        container.appendChild(newLocador);
+
+        locadorCount++;
+    }
+
+            function agregarLocatario() {
+
+        const container = document.getElementById('locatarios-container');
+
+        const newLocatario = document.createElement('div');
+
+        newLocatario.className = 'form-grid locatario-item additional-user';
+
+        newLocatario.innerHTML = `
+            <button type="button"
+                class="remove-user-btn"
+                onclick="eliminarBloque(this)">
+                
+                <iconify-icon icon="lucide:x" style="font-size:16px;"></iconify-icon>
+            </button>
+
+            <div class="form-field">
+                <div class="form-label">Nombre completo</div>
+                <input type="text" name="inquilino[${locatarioCount}][name]" class="input-real">
+            </div>
+
+            <div class="form-field">
+                <div class="form-label">DNI / CUIT</div>
+                <input type="text" name="inquilino[${locatarioCount}][dni_number]" class="input-real">
+            </div>
+
+            <div class="two-col-row">
+                <div class="form-field">
+                    <div class="form-label">Correo electrónico</div>
+                    <input type="email" name="inquilino[${locatarioCount}][email]" class="input-real">
                 </div>
 
-                <div class="two-col-row">
-                    <div class="form-field">
-                        <div class="form-label">Correo electrónico</div>
-                        <input type="email" name="inquilino[${locatarioCount}][email]" placeholder="correo@ejemplo.com" class="input-real">
-                    </div>
-                    <div class="form-field">
-                        <div class="form-label">Teléfono</div>
-                        <input type="tel" name="inquilino[${locatarioCount}][phone]" placeholder="351 123 4567" class="input-real">
-                    </div>
+                <div class="form-field">
+                    <div class="form-label">Teléfono</div>
+                    <input type="tel" name="inquilino[${locatarioCount}][phone]" class="input-real">
                 </div>
-            `;
-            container.appendChild(newLocatario);
-            locatarioCount++;
-        }
-    </script>
+            </div>
+        `;
+
+        container.appendChild(newLocatario);
+
+        locatarioCount++;
+    }
+</script>
 </body>
 </html>
 </x-guest-layout>

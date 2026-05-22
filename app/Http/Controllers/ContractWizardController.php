@@ -137,22 +137,32 @@ class ContractWizardController extends Controller
                 ]);
             // 🔥 ESTE FALTABA
             case '3b':
-                $data = $request->validate([
-                    'poliza_aseguradora' => 'required|string|max:255',
-                    'poliza_aseguradora_otra' => 'required_if:poliza_aseguradora,Otra|string|max:255',
-                    'poliza_numero' => 'required|string|max:255',
-                    'poliza_certificado' => 'nullable|string|max:255',
-                    'poliza_emision' => 'required|date',
-                    'poliza_vigencia_desde' => 'required|date',
-                    'poliza_vigencia_hasta' => 'required|date|after:poliza_vigencia_desde',
-                    'poliza_tomador' => 'required|string|max:255',
-                    'poliza_monto' => 'required|numeric|min:0',
-                    'poliza_documento' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
-                ]);
-                
-                if ($data['poliza_aseguradora'] === 'Otra') {
-                    $data['poliza_aseguradora'] = $data['poliza_aseguradora_otra'];
-                }
+                    
+            $data = $request->validate([
+                'poliza_aseguradora' => 'required|string|max:255',
+                'poliza_aseguradora_otra' => 'nullable|string|max:255',
+                    
+                'poliza_numero' => 'required|string|max:255',
+                'poliza_certificado' => 'nullable|string|max:255',
+                    
+                'poliza_emision' => 'required|date',
+                    
+                'poliza_vigencia_desde' => 'required|date',
+                'poliza_vigencia_hasta' => 'required|date|after:poliza_vigencia_desde',
+                    
+                'poliza_tomador' => 'required|string|max:255',
+                    
+                'poliza_monto' => 'required|numeric|min:0',
+                    
+                'poliza_documento' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+            ]);
+                    
+            // Si selecciona "Otra"
+            if (($data['poliza_aseguradora'] ?? null) === 'Otra') {
+                $data['poliza_aseguradora'] = $data['poliza_aseguradora_otra'];
+            }
+                    
+            return $data;
             }
             
             // 🔥 fallback defensivo (MUY recomendable)

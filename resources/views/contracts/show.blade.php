@@ -779,18 +779,85 @@
 
                             <div 
                                 class="doc-card"
-                                onclick="openModal('{{ asset($doc->public_url) }}')">
+                                onclick="openModal('{{ $doc->url }}')">
 
                                 <div class="doc-thumb">
-                                
-                                    <img
-                                        src="{{ asset($doc->public_url) }}"
-                                        alt="{{ $doc->document_type }}">
-                                
+
+                                    @if($doc->isPdf())
+
+                                        <div style="
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:center;
+                                            height:100%;
+                                            width:100%;
+                                            background:#f3f4f6;
+                                            font-size:48px;
+                                        ">
+                                            📄
+                                        </div>
+                                    
+                                    @else
+                                    
+                                        <img
+                                            src="{{ $doc->url }}"
+                                            alt="{{ $doc->document_type }}"
+                                        >
+                                    
+                                    @endif
+                                    
                                 </div>
                             
                                 <div class="doc-label">
-                                    {{ ucfirst(str_replace('_', ' ', $doc->document_type)) }}
+
+                                    <strong>
+                                        {{ ucfirst(str_replace('_', ' ', $doc->document_type)) }}
+                                    </strong>
+                                
+                                    {{-- Datos extra póliza --}}
+                                    @if($doc->document_type === 'poliza' && $doc->metadata)
+                                
+                                        <div class="doc-meta">
+                                        
+                                            @if($doc->getMeta('aseguradora'))
+                                                <div>
+                                                    <strong>Aseguradora:</strong>
+                                                    {{ $doc->getMeta('aseguradora') }}
+                                                </div>
+                                            @endif
+                                            
+                                            @if($doc->getMeta('numero'))
+                                                <div>
+                                                    <strong>N°:</strong>
+                                                    {{ $doc->getMeta('numero') }}
+                                                </div>
+                                            @endif
+                                            
+                                            @if($doc->getMeta('vigencia_desde'))
+                                                <div>
+                                                    <strong>Desde:</strong>
+                                                    {{ \Carbon\Carbon::parse($doc->getMeta('vigencia_desde'))->format('d/m/Y') }}
+                                                </div>
+                                            @endif
+                                            
+                                            @if($doc->getMeta('vigencia_hasta'))
+                                                <div>
+                                                    <strong>Hasta:</strong>
+                                                    {{ \Carbon\Carbon::parse($doc->getMeta('vigencia_hasta'))->format('d/m/Y') }}
+                                                </div>
+                                            @endif
+                                            
+                                            @if($doc->getMeta('monto'))
+                                                <div>
+                                                    <strong>Monto:</strong>
+                                                    ${{ number_format($doc->getMeta('monto'), 0, ',', '.') }}
+                                                </div>
+                                            @endif
+                                            
+                                        </div>
+                                    
+                                    @endif
+                                    
                                 </div>
                             
                             </div>
@@ -831,12 +898,11 @@
                                 @foreach($payment->proof_path as $role => $proof)
                     
                                     <div class="doc-card"
-                                         onclick="openModal('{{ asset($proof) }}')">
+                                         onclick="openModal('{{ $proof }}')">
                     
                                         <div class="doc-thumb">
                                         
-                                            <img
-                                                src="{{ asset($proof) }}"
+                                            <img src="{{ $proof }}"
                                                 alt="Comprobante">
                                         
                                         </div>
@@ -897,7 +963,7 @@
                             <iconify-icon icon="lucide:plus" style="font-size: 18px;"></iconify-icon>
                             Crear Nuevo Contrato
                         </a>
-                    <!--<a href="{{ route('home') }}" class="btn btn-subtle">
+                    <!--<a href="{{-- route('home') --}}" class="btn btn-subtle">
                         <iconify-icon icon="lucide:home" style="font-size: 18px;"></iconify-icon>
                         Ir al Inicio
                     </a>-->

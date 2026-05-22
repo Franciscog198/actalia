@@ -10,9 +10,13 @@ class ContractDocument extends Model
     use HasFactory;
 
     protected $fillable = [
-      'contract_id',
+        'contract_id',
         'user_id',
         'document_type',
+
+        // 👇 NUEVO
+        'metadata',
+
         'original_filename',
         'storage_path',
         'public_url',
@@ -32,6 +36,9 @@ class ContractDocument extends Model
     {
         return [
             'uploaded_at' => 'datetime',
+
+            // 👇 NUEVO
+            'metadata' => 'array',
         ];
     }
 
@@ -62,7 +69,7 @@ class ContractDocument extends Model
      */
     public function getThumbnailUrlAttribute()
     {
-        return $this->thumbnail_path 
+        return $this->thumbnail_path
             ? asset('storage/' . $this->thumbnail_path)
             : $this->url;
     }
@@ -73,12 +80,37 @@ class ContractDocument extends Model
     public function getFileSizeHumanAttribute()
     {
         $bytes = $this->file_size;
+
         $units = ['B', 'KB', 'MB', 'GB'];
-        
+
         for ($i = 0; $bytes > 1024; $i++) {
             $bytes /= 1024;
         }
-        
+
         return round($bytes, 2) . ' ' . $units[$i];
+    }
+
+    /**
+     * Obtener metadata segura
+     */
+    public function getMeta(string $key, $default = null)
+    {
+        return data_get($this->metadata, $key, $default);
+    }
+
+    /**
+     * Verificar si es imagen
+     */
+    public function isImage(): bool
+    {
+        return str_starts_with($this->mime_type, 'image/');
+    }
+
+    /**
+     * Verificar si es PDF
+     */
+    public function isPdf(): bool
+    {
+        return $this->mime_type === 'application/pdf';
     }
 }

@@ -45,62 +45,104 @@ class PaymentController extends Controller
              * =====================================
              */
             $path = "contracts/{$contract->id}/payments";
-
-            /**
-             * =====================================
-             * RUTA REAL PUBLIC_HTML
-             * =====================================
-             */
-            $destinationPath = base_path('../public_html/storage/' . $path);
-
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
-            }
-
+            
             /**
              * =====================================
              * LOCADOR
              * =====================================
              */
             $fileLocador = $request->file('comprobante_locador');
-
+            
             $filenameLocador =
                 time() .
                 '_locador_' .
                 uniqid() .
                 '.' .
                 $fileLocador->getClientOriginalExtension();
-
-            $fileLocador->move($destinationPath, $filenameLocador);
-
+            
+            /**
+             * =====================================
+             * STORAGE LARAVEL
+             * =====================================
+             */
+            $laravelPath = storage_path(
+                'app/public/' . $path
+            );
+            
+            if (!file_exists($laravelPath)) {
+                mkdir($laravelPath, 0777, true);
+            }
+            
+            $fileLocador->move(
+                $laravelPath,
+                $filenameLocador
+            );
+            
+            /**
+             * =====================================
+             * DUPLICAR EN PUBLIC_HTML
+             * =====================================
+             */
+            $publicHtmlPath = base_path(
+                '../public_html/app/storage/' . $path
+            );
+            
+            if (!file_exists($publicHtmlPath)) {
+                mkdir($publicHtmlPath, 0777, true);
+            }
+            
+            copy(
+                $laravelPath . '/' . $filenameLocador,
+                $publicHtmlPath . '/' . $filenameLocador
+            );
+            
+            /**
+             * URL PUBLICA
+             */
             $storedLocador =
                 '/storage/' .
                 $path .
                 '/' .
                 $filenameLocador;
-
+            
             /**
              * =====================================
              * LOCATARIO
              * =====================================
              */
             $fileLocatario = $request->file('comprobante_locatario');
-
+            
             $filenameLocatario =
                 time() .
                 '_locatario_' .
                 uniqid() .
                 '.' .
                 $fileLocatario->getClientOriginalExtension();
-
-            $fileLocatario->move($destinationPath, $filenameLocatario);
-
+            
+            /**
+             * STORAGE LARAVEL
+             */
+            $fileLocatario->move(
+                $laravelPath,
+                $filenameLocatario
+            );
+            
+            /**
+             * DUPLICAR EN PUBLIC_HTML
+             */
+            copy(
+                $laravelPath . '/' . $filenameLocatario,
+                $publicHtmlPath . '/' . $filenameLocatario
+            );
+            
+            /**
+             * URL PUBLICA
+             */
             $storedLocatario =
                 '/storage/' .
                 $path .
                 '/' .
                 $filenameLocatario;
-
             /**
              * =====================================
              * CREAR PAGO

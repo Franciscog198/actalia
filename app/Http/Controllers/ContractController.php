@@ -390,90 +390,167 @@ class ContractController extends Controller
     public function storeFinal(array $data)
     {
         try {
+    
             DB::beginTransaction();
-
+    
+            // =====================================
+            // CREAR CONTRATO
+            // =====================================
+    
             $contract = Contract::create([
-                'contract_type' => $data['contract_type'],
+                'contract_type' => $data['contract_type'] ?? null,
                 'address' => $data['address'],
                 'city' => $data['city'],
                 'province' => $data['province'],
                 'start_date' => $data['start_date'],
                 'end_date' => $data['end_date'],
+    
                 'guarantee_type' => $data['guarantee_type'] ?? null,
                 'registrant_type' => $data['registrant_type'] ?? null,
+    
                 'status' => 'draft',
                 'payment_status' => 'pending',
                 'current_step' => 4,
-
-                // 👇 póliza
-                'poliza_aseguradora' => $data['poliza_aseguradora'] ?? null,
-                'poliza_numero' => $data['poliza_numero'] ?? null,
-                'poliza_certificado' => $data['poliza_certificado'] ?? null,
-                'poliza_emision' => $data['poliza_emision'] ?? null,
-                'poliza_vigencia_desde' => $data['poliza_vigencia_desde'] ?? null,
-                'poliza_vigencia_hasta' => $data['poliza_vigencia_hasta'] ?? null,
-                'poliza_tomador' => $data['poliza_tomador'] ?? null,
-                'poliza_monto' => $data['poliza_monto'] ?? null,
             ]);
-
+    
+            // =====================================
             // INQUILINOS
+            // =====================================
+    
             foreach ($data['inquilino'] ?? [] as $i => $inq) {
+    
                 $user = $this->createOrUpdateUser($inq);
-
+    
                 $contract->users()->attach($user->id, [
                     'role_in_contract' => 'inquilino',
                     'order' => $i + 1,
                 ]);
             }
-
+    
+            // =====================================
             // PROPIETARIOS
+            // =====================================
+    
             foreach ($data['propietario'] ?? [] as $i => $prop) {
+    
                 $user = $this->createOrUpdateUser($prop);
-
+    
                 $contract->users()->attach($user->id, [
                     'role_in_contract' => 'propietario',
                     'order' => $i + 1,
                 ]);
             }
-
-             // 📎 guardar documento como ContractDocument
-            if (!empty($data['poliza_documento'])) {
-
+    
+            // =====================================
+            // GUARDAR POLIZA
+            // =====================================
+    
+            if (
+                !empty($data['poliza_documento']) &&
+                Storage::disk('public')->exists($data['poliza_documento'])
+            ) {
+    
+                // path temporal
                 $tempPath = $data['poliza_documento'];
-
-                // Nombre del archivo
-                $filename = basename($tempPath);
-
-                // Nueva ruta definitiva
-                $newPath = "contracts/{$contract->id}/poliza/{$filename}";
-
-                // Mover archivo
+    
+                // extension
+                $extension = pathinfo($tempPath, PATHINFO_EXTENSION);
+    
+                // nombre final
+                $filename =
+                    time() .
+                    '_poliza_' .
+                    uniqid() .
+                    '.' .
+                    $extension;
+    
+                // ruta final
+                $newPath = "contracts/{$contract->id}/documents/{$filename}";
+    
+                // mover archivo
                 Storage::disk('public')->move($tempPath, $newPath);
-
-                // Guardar en tabla contract_documents
+    
+                // path absoluto
+                $absolutePath = Storage::disk('public')->path($newPath);
+    
+                // mime
+                $mimeType = Storage::disk('public')->mimeType($newPath);
+    
+                // size
+                $fileSize = Storage::disk('public')->size($newPath);
+    
+                // dimensiones
+                $width = null;
+                $height = null;
+    
+                if (str_starts_with($mimeType, 'image/')) {
+    
+                    try {
+    
+                        $imageSize = getimagesize($absolutePath);
+    
+                        $width = $imageSize[0] ?? null;
+                        $height = $imageSize[1] ?? null;
+    
+                    } catch (\Exception $e) {
+    
+                        \Log::warning($e->getMessage());
+                    }
+                }
+    
+                // guardar documento
                 ContractDocument::create([
+    
                     'contract_id' => $contract->id,
+    
                     'document_type' => 'poliza',
-                    'original_filename' => $filename,
+    
+                    'metadata' => [
+                        'aseguradora' => $data['poliza_aseguradora'] ?? null,
+                        'numero' => $data['poliza_numero'] ?? null,
+                        'certificado' => $data['poliza_certificado'] ?? null,
+                        'emision' => $data['poliza_emision'] ?? null,
+                        'vigencia_desde' => $data['poliza_vigencia_desde'] ?? null,
+                        'vigencia_hasta' => $data['poliza_vigencia_hasta'] ?? null,
+                        'tomador' => $data['poliza_tomador'] ?? null,
+                        'monto' => $data['poliza_monto'] ?? null,
+                    ],
+    
+                    'original_filename' => basename($newPath),
+    
                     'storage_path' => $newPath,
+    
                     'public_url' => Storage::url($newPath),
-                    'file_size' => Storage::disk('public')->size($newPath),
-                    'mime_type' => Storage::disk('public')->mimeType($newPath),
+    
+                    'file_size' => $fileSize,
+    
+                    'mime_type' => $mimeType,
+    
+                    'width' => $width,
+                    'height' => $height,
+    
                     'uploaded_from' => 'web',
+    
                     'ip_address' => request()->ip(),
+    
+                    'uploaded_at' => now(),
                 ]);
             }
-
+    
             DB::commit();
-
+    
             Session::forget('contract_wizard');
-
-            return redirect()->route('documents.create', $contract->unique_token);
-
+    
+            return redirect()->route(
+                'documents.create',
+                $contract->unique_token
+            );
+    
         } catch (\Exception $e) {
+    
             DB::rollBack();
-
-            dd($e->getMessage()); // debug real
+    
+            dd($e->getMessage());
         }
     }
 

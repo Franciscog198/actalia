@@ -3,8 +3,8 @@
 <div
   class="export-wrapper"
   style="
-    width: 375px;
-    min-height: 812px;
+    width: auto;
+    min-height: auto;
     position: relative;
     font-family: var(--font-family-body);
     background-color: var(--background);
@@ -81,7 +81,7 @@
           align-items: center;
           justify-content: center;
           z-index: 2;
-          padding: 60px 20px 20px;
+          padding: 20px 20px 20px;
           min-height: 300px;
         }
         .logo-box {

@@ -2,431 +2,812 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contrato {{ $contract->unique_token }}</title>
+
     <style>
+
+        :root {
+            --background: #ffffff;
+            --foreground: #0b2340;
+            --border: #00000014;
+            --input: #f5f7fa;
+            --primary: #0a5faa;
+            --primary-foreground: #ffffff;
+            --secondary: #f0f6ff;
+            --muted: #f0f0f3;
+            --muted-foreground: #6b7280;
+            --accent: #92ffa5;
+            --card: #ffffff;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 11pt;
-            line-height: 1.6;
-            color: #333;
+
+        @page {
+            margin: 10mm;
         }
-        
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11pt;
+            color: var(--foreground);
+            background: white;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .report-shell {
+            width: 100%;
+            background: white;
+            padding: 20px 25px;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | HEADER
+        |--------------------------------------------------------------------------
+        */
+
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px 20px;
             text-align: center;
             margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary);
         }
-        
-        .header h1 {
-            font-size: 24pt;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            font-size: 10pt;
-            margin: 5px 0;
-        }
-        
-        .container {
-            padding: 0 40px;
-        }
-        
-        .section {
-            margin-bottom: 30px;
-            page-break-inside: avoid;
-        }
-        
-        .section-title {
-            font-size: 16pt;
-            font-weight: bold;
-            color: #667eea;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 8px;
+
+        .logo {
+            max-width: 120px;
+            height: auto;
             margin-bottom: 15px;
         }
-        
-        .info-table {
+
+        .title {
+            font-size: 28pt;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .subtitle {
+            font-size: 12pt;
+            font-weight: 500;
+            color: var(--muted-foreground);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | MÉTRICAS
+        |--------------------------------------------------------------------------
+        */
+
+        .metrics-grid {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
-        
-        .info-table td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #e0e0e0;
+
+        .metric-card {
+            width: 33.33%;
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
         }
-        
-        .info-table td:first-child {
-            font-weight: bold;
-            width: 35%;
-            color: #666;
+
+        .metric-label {
+            font-size: 10pt;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            margin-bottom: 5px;
         }
-        
-        .user-card {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            margin-bottom: 15px;
+
+        .metric-value {
+            font-size: 11pt;
+            font-weight: 700;
+            color: var(--foreground);
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            background: var(--secondary);
+            color: var(--primary);
+            font-size: 10pt;
+            font-weight: 700;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | SECTION
+        |--------------------------------------------------------------------------
+        */
+
+        .section {
+            margin-bottom: 20px;
             page-break-inside: avoid;
         }
-        
-        .user-card.inquilino {
-            border-left-color: #28a745;
+
+        .section-head {
+            background: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            font-size: 13pt;
+            font-weight: 700;
         }
-        
-        .user-card.propietario {
-            border-left-color: #17a2b8;
+
+        .section-bars {
+            display: inline-block;
+            width: 4px;
+            height: 14px;
+            background: var(--accent);
+            margin-right: 10px;
+            vertical-align: middle;
         }
-        
-        .user-card.garante {
-            border-left-color: #ffc107;
+
+        .section-body {
+            background: var(--muted);
+            padding: 15px;
         }
-        
-        .user-card h3 {
-            font-size: 12pt;
-            margin-bottom: 10px;
-            color: #333;
+
+        /*
+        |--------------------------------------------------------------------------
+        | TABLA INFO
+        |--------------------------------------------------------------------------
+        */
+
+        .panel-table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        
-        .user-card .badge {
+
+        .row {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .row td {
+            padding: 10px 0;
+        }
+
+        .key {
+            font-size: 11pt;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            width: 40%;
+        }
+
+        .val {
+            font-size: 11pt;
+            font-weight: 700;
+            color: var(--foreground);
+            text-align: right;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | FIRMANTES
+        |--------------------------------------------------------------------------
+        */
+
+        .signers {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .signer-card {
+            width: 50%;
+            background: white;
+            border: 1px solid var(--border);
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        .tag {
             display: inline-block;
             padding: 4px 10px;
             border-radius: 12px;
+            background: #e8f7ef;
+            color: var(--foreground);
             font-size: 9pt;
-            font-weight: bold;
+            font-weight: 700;
             margin-bottom: 8px;
         }
-        
-        .badge-inquilino {
-            background: #28a745;
-            color: white;
+
+        .signer-name {
+            font-size: 14pt;
+            font-weight: 800;
+            color: var(--foreground);
+            margin: 5px 0;
         }
-        
-        .badge-propietario {
-            background: #17a2b8;
-            color: white;
-        }
-        
-        .badge-garante {
-            background: #ffc107;
-            color: #333;
-        }
-        
-        .user-info {
+
+        .signer-line {
             font-size: 10pt;
-            line-height: 1.8;
-        }
-        
-        .user-info p {
+            font-weight: 500;
+            color: var(--muted-foreground);
             margin: 3px 0;
         }
-        
-        .documents-grid {
-            display: table;
+
+        /*
+        |--------------------------------------------------------------------------
+        | DOCUMENTOS
+        |--------------------------------------------------------------------------
+        */
+
+        .docs-grid {
             width: 100%;
-            margin-top: 15px;
+            border-collapse: collapse;
         }
-        
-        .document-row {
-            display: table-row;
-        }
-        
-        .document-cell {
-            display: table-cell;
-            width: 50%;
-            padding: 10px;
+
+        .doc-card {
+            width: 25%;
+            padding: 8px;
+            text-align: center;
             vertical-align: top;
         }
-        
-        .document-item {
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 10px;
-            text-align: center;
-            background: #f8f9fa;
+
+        .doc-box {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 6px;
         }
-        
-        .document-item img {
+
+        .doc-thumb {
+            width: 100%;
+            height: 120px;
+            background: white;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | IMÁGENES SIN DEFORMAR
+        |--------------------------------------------------------------------------
+        */
+
+        .doc-thumb img {
             max-width: 100%;
-            max-height: 200px;
-            border-radius: 5px;
-            margin-bottom: 8px;
-        }
-        
-        .document-label {
-            font-size: 9pt;
-            color: #666;
-            font-weight: bold;
-        }
-        
-        .footer {
-            margin-top: 40px;
-            padding: 20px 40px;
-            background: #f8f9fa;
-            text-align: center;
-            font-size: 9pt;
-            color: #666;
-            page-break-inside: avoid;
-        }
-        
-        .token-box {
-            background: #fff;
-            border: 2px dashed #667eea;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 20px 0;
-            text-align: center;
-            font-family: monospace;
-            font-size: 10pt;
-            word-break: break-all;
-        }
-        
-        .status-badge {
+            max-height: 110px;
+            width: auto;
+            height: auto;
             display: inline-block;
-            padding: 5px 12px;
-            border-radius: 12px;
+        }
+
+        .doc-label {
             font-size: 9pt;
-            font-weight: bold;
+            font-weight: 700;
+            color: var(--foreground);
+            margin-top: 6px;
+            line-height: 1.3;
         }
-        
-        .status-completed {
-            background: #d4edda;
-            color: #155724;
+
+        .doc-meta {
+            margin-top: 5px;
+            font-size: 8pt;
+            color: var(--muted-foreground);
+            line-height: 1.4;
         }
-        
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
+
+        /*
+        |--------------------------------------------------------------------------
+        | TOKEN
+        |--------------------------------------------------------------------------
+        */
+
+        .token-text {
+            font-size: 11pt;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            margin-bottom: 10px;
         }
-        
-        .page-break {
-            page-break-after: always;
+
+        .token-box {
+            background: white;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            padding: 15px;
+            text-align: center;
+            color: var(--primary);
+            font-size: 11pt;
+            font-weight: 700;
+            letter-spacing: 1px;
+            word-break: break-all;
+            font-family: monospace;
         }
-        
-        @page {
-            margin: 0;
+
+        /*
+        |--------------------------------------------------------------------------
+        | FOOTER
+        |--------------------------------------------------------------------------
+        */
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 2px solid var(--primary);
+            text-align: center;
+            font-size: 9pt;
+            color: var(--muted-foreground);
+            line-height: 1.6;
         }
+
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        @if(file_exists(public_path('images/logo.png')))
-            <img src="{{ public_path('images/logo.png') }}" alt="Logo" style="max-width: 100px; margin-bottom: 15px;">
-        @endif
-        <h1>📋 CONTRATO REGISTRADO</h1>
-        <p>{{ $contract->address }}</p>
-        <p>{{ $contract->city }}, {{ $contract->province }}</p>
-        @if($contract->unit)
-            <p>{{ $contract->unit }}</p>
-        @endif
-    </div>
-    
-    <div class="container">
-        <!-- Información del Contrato -->
-        <div class="section">
-            <h2 class="section-title">🏠 Información del Contrato</h2>
-            
-            <table class="info-table">
-                <tr>
-                    <td>Tipo de Alquiler:</td>
-                    <td><strong>{{ ucfirst($contract->contract_type) }}</strong></td>
-                </tr>
-                @if($contract->property_name)
-                <tr>
-                    <td>Nombre de la Propiedad:</td>
-                    <td>{{ $contract->property_name }}</td>
-                </tr>
-                @endif
-                <tr>
-                    <td>Dirección Completa:</td>
-                    <td>{{ $contract->address }}{{ $contract->unit ? ', ' . $contract->unit : '' }}</td>
-                </tr>
-                <tr>
-                    <td>Ciudad:</td>
-                    <td>{{ $contract->city }}</td>
-                </tr>
-                <tr>
-                    <td>Provincia:</td>
-                    <td>{{ $contract->province }}</td>
-                </tr>
-                @if($contract->postal_code)
-                <tr>
-                    <td>Código Postal:</td>
-                    <td>{{ $contract->postal_code }}</td>
-                </tr>
-                @endif
-                <tr>
-                    <td>Fecha de Inicio:</td>
-                    <td>{{ $contract->start_date->format('d/m/Y') }}</td>
-                </tr>
-                <tr>
-                    <td>Fecha de Fin:</td>
-                    <td>{{ $contract->end_date->format('d/m/Y') }}</td>
-                </tr>
-                <tr>
-                    <td>Duración:</td>
-                    <td>{{ $contract->start_date->diffInMonths($contract->end_date) }} meses ({{ $contract->start_date->diffInYears($contract->end_date) }} años)</td>
-                </tr>
-                @if($contract->monthly_rent)
-                <tr>
-                    <td>Alquiler Mensual:</td>
-                    <td><strong>${{ number_format($contract->monthly_rent, 2, ',', '.') }}</strong></td>
-                </tr>
-                @endif
-                <tr>
-                    <td>Estado del Contrato:</td>
-                    <td>
-                        @if($contract->status == 'completed')
-                            <span class="status-badge status-completed">✓ Completo</span>
-                        @elseif($contract->status == 'pending_payment')
-                            <span class="status-badge status-pending">⏳ Pendiente de Pago</span>
-                        @else
-                            <span class="status-badge">📝 {{ ucfirst($contract->status) }}</span>
-                        @endif
-                    </td>
-                </tr>
-                <tr>
-                    <td>Fecha de Registro:</td>
-                    <td>{{ $contract->created_at->format('d/m/Y H:i') }}</td>
-                </tr>
-            </table>
-        </div>
-        
-        <!-- Firmantes -->
-        <div class="section">
-            <h2 class="section-title">👥 Firmantes del Contrato</h2>
-            
-            @foreach($contract->users as $user)
-                @php
-                    $roleClass = match($user->pivot->role_in_contract) {
-                        'inquilino' => 'inquilino',
-                        'propietario' => 'propietario',
-                        default => 'garante'
-                    };
-                    
-                    $badgeClass = match($user->pivot->role_in_contract) {
-                        'inquilino' => 'badge-inquilino',
-                        'propietario' => 'badge-propietario',
-                        default => 'badge-garante'
-                    };
-                    
-                    $roleLabel = match($user->pivot->role_in_contract) {
-                        'inquilino' => 'Inquilino',
-                        'propietario' => 'Propietario',
-                        'garante_1' => 'Garante 1',
-                        'garante_2' => 'Garante 2',
-                        default => 'Firmante'
-                    };
-                @endphp
-                
-                <div class="user-card {{ $roleClass }}">
-                    <span class="badge {{ $badgeClass }}">{{ $roleLabel }}</span>
-                    <h3>{{ $user->name }}</h3>
-                    <div class="user-info">
-                        <p><strong>📧 Email:</strong> {{ $user->email }}</p>
-                        <p><strong>📱 Teléfono:</strong> {{ $user->phone }}</p>
-                        @if($user->dni_number)
-                            <p><strong>🆔 DNI:</strong> {{ $user->dni_number }}</p>
-                        @endif
-                        @if($user->address)
-                            <p><strong>📍 Domicilio:</strong> {{ $user->address }}</p>
-                        @endif
-                    </div>
-                </div>
-            @endforeach
-        </div>
-        
-        <!-- Documentos -->
-        @if($contract->documents->count() > 0)
-        <div class="section page-break">
-            <h2 class="section-title">📁 Documentos Adjuntos ({{ $contract->documents->count() }})</h2>
-            
-            <div class="documents-grid">
-                @foreach($contract->documents->chunk(2) as $chunk)
-                    <div class="document-row">
-                        @foreach($chunk as $doc)
-                            <div class="document-cell">
-                                <div class="document-item">
-                                    @if(file_exists(public_path('storage/' . $doc->storage_path)))
-                                        <img src="{{ public_path('storage/' . $doc->storage_path) }}" alt="{{ $doc->document_type }}">
-                                    @else
-                                        <p style="color: #999; padding: 40px;">Imagen no disponible</p>
-                                    @endif
-                                    <p class="document-label">{{ ucfirst(str_replace('_', ' ', $doc->document_type)) }}</p>
-                                    <p style="font-size: 8pt; color: #999;">{{ number_format($doc->file_size / 1024 / 1024, 2) }} MB</p>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @endforeach
+
+<div class="page">
+
+    <div class="report-shell">
+
+        <!-- HEADER -->
+        <div class="header">
+
+            @php
+                $logoPath = public_path('assets/images/actalia.png');
+            @endphp
+
+            @if(file_exists($logoPath))
+                <img src="{{ $logoPath }}" alt="Logo" class="logo">
+            @endif
+
+            <h1 class="title">
+                Contrato Registrado
+            </h1>
+
+            <div class="subtitle">
+                Constancia de Registro Digital
             </div>
+
         </div>
-        @endif
-        
-        <!-- Información de Pago -->
-        @if($contract->payments->count() > 0)
+
+        <!-- MÉTRICAS -->
+        <table class="metrics-grid">
+            <tr>
+
+                <td class="metric-card">
+                    <div class="metric-label">
+                        Tipo de alquiler
+                    </div>
+
+                    <div class="metric-value">
+                        {{ ucfirst($contract->contract_type) }}
+                    </div>
+                </td>
+
+                <td class="metric-card">
+                    <div class="metric-label">
+                        Estado
+                    </div>
+
+                    <div class="metric-value">
+
+                        @if($contract->status == 'completed' || $contract->status == 'active')
+
+                            <span class="status-pill">
+                                Vigente
+                            </span>
+
+                        @elseif($contract->status == 'cancelled')
+
+                            <span class="status-pill">
+                                Finalizado
+                            </span>
+
+                        @else
+
+                            <span class="status-pill">
+                                Pendiente
+                            </span>
+
+                        @endif
+
+                    </div>
+                </td>
+
+                <td class="metric-card">
+                    <div class="metric-label">
+                        Fecha de registro
+                    </div>
+
+                    <div class="metric-value">
+                        {{ $contract->created_at->format('d/m/Y H:i') }}
+                    </div>
+                </td>
+
+            </tr>
+        </table>
+
+        <!-- INFORMACIÓN -->
         <div class="section">
-            <h2 class="section-title">💳 Información de Pago</h2>
-            
-            <table class="info-table">
-                @foreach($contract->payments as $payment)
-                    <tr>
-                        <td>Monto:</td>
-                        <td><strong>${{ number_format($payment->amount, 2, ',', '.') }}</strong></td>
+
+            <div class="section-head">
+                <span class="section-bars"></span>
+                Información del Contrato
+            </div>
+
+            <div class="section-body">
+
+                <table class="panel-table">
+
+                    <tr class="row">
+                        <td class="key">Dirección:</td>
+                        <td class="val">{{ $contract->address }}</td>
                     </tr>
-                    <tr>
-                        <td>Estado:</td>
-                        <td>
-                            @if($payment->status == 'completed')
-                                <span class="status-badge status-completed">✓ Pagado</span>
-                            @elseif($payment->status == 'pending')
-                                <span class="status-badge status-pending">⏳ Pendiente</span>
-                            @else
-                                {{ ucfirst($payment->status) }}
-                            @endif
+
+                    <tr class="row">
+                        <td class="key">Ciudad:</td>
+                        <td class="val">{{ $contract->city }}</td>
+                    </tr>
+
+                    <tr class="row">
+                        <td class="key">Provincia:</td>
+                        <td class="val">{{ $contract->province }}</td>
+                    </tr>
+
+                    @if($contract->guarantee_type)
+                    <tr class="row">
+                        <td class="key">Tipo de garantía:</td>
+                        <td class="val">
+                            {{ ucfirst(str_replace('_', ' ', $contract->guarantee_type)) }}
                         </td>
                     </tr>
-                    @if($payment->paid_at)
-                    <tr>
-                        <td>Fecha de Pago:</td>
-                        <td>{{ $payment->paid_at->format('d/m/Y H:i') }}</td>
-                    </tr>
                     @endif
-                @endforeach
-            </table>
-        </div>
-        @endif
-        
-        <!-- Token -->
-        <div class="section">
-            <h2 class="section-title">🔑 Token del Contrato</h2>
-            <div class="token-box">
-                <p style="margin-bottom: 8px; font-size: 9pt; color: #666;">Token de acceso:</p>
-                <strong style="font-size: 11pt;">{{ $contract->unique_token }}</strong>
+
+                    <tr class="row">
+                        <td class="key">Inicio:</td>
+                        <td class="val">
+                            {{ $contract->start_date->format('d/m/Y') }}
+                        </td>
+                    </tr>
+
+                    <tr class="row">
+                        <td class="key">Fin:</td>
+                        <td class="val">
+                            {{ $contract->end_date->format('d/m/Y') }}
+                        </td>
+                    </tr>
+
+                </table>
+
             </div>
-            <p style="font-size: 9pt; color: #666; text-align: center;">
-                Accede al contrato en: {{ route('contracts.show', $contract->unique_token) }}
-            </p>
+
         </div>
+
+        <!-- FIRMANTES -->
+        <div class="section">
+
+            <div class="section-head">
+                <span class="section-bars"></span>
+                Firmantes del Contrato
+            </div>
+
+            <div class="section-body">
+
+                <table class="signers">
+
+                    @foreach($contract->users->chunk(2) as $userChunk)
+
+                        <tr>
+
+                            @foreach($userChunk as $user)
+
+                                <td class="signer-card">
+
+                                    <span class="tag">
+
+                                        {{
+                                            $user->pivot->role_in_contract == 'propietario'
+                                            ? 'Locador'
+                                            : (
+                                                $user->pivot->role_in_contract == 'inquilino'
+                                                ? 'Locatario'
+                                                : ucfirst(str_replace('_', ' ', $user->pivot->role_in_contract))
+                                            )
+                                        }}
+
+                                    </span>
+
+                                    <div class="signer-name">
+                                        {{ $user->name }}
+                                    </div>
+
+                                    <div class="signer-line">
+                                        Email: {{ $user->email }}
+                                    </div>
+
+                                    <div class="signer-line">
+                                        Teléfono: {{ $user->phone }}
+                                    </div>
+
+                                </td>
+
+                            @endforeach
+
+                            @if($userChunk->count() == 1)
+                                <td class="signer-card"></td>
+                            @endif
+
+                        </tr>
+
+                    @endforeach
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- DOCUMENTOS -->
+        @if($contract->documents->count() > 0)
+
+        <div class="section">
+
+            <div class="section-head">
+                <span class="section-bars"></span>
+                Documentos e Imágenes ({{ $contract->documents->count() }})
+            </div>
+
+            <div class="section-body">
+
+                <table class="docs-grid">
+
+                    @foreach($contract->documents->chunk(4) as $docChunk)
+
+                        <tr>
+
+                            @foreach($docChunk as $doc)
+
+                                @php
+                                    $imagePath = public_path('storage/' . $doc->storage_path);
+
+                                    $imageData = '';
+
+                                    $mimeType = 'image/jpeg';
+
+                                    if (file_exists($imagePath)) {
+
+                                        $imageData = base64_encode(
+                                            file_get_contents($imagePath)
+                                        );
+
+                                        $mimeType = mime_content_type($imagePath);
+                                    }
+                                @endphp
+
+                                <td class="doc-card">
+
+                                    <div class="doc-box">
+
+                                        <div class="doc-thumb">
+
+                                            @if($imageData)
+
+                                                <img
+                                                    src="data:{{ $mimeType }};base64,{{ $imageData }}"
+                                                    alt="{{ $doc->document_type }}"
+                                                >
+
+                                            @else
+
+                                                <div style="padding-top:40px; color:#999;">
+                                                    Sin imagen
+                                                </div>
+
+                                            @endif
+
+                                        </div>
+
+                                        <div class="doc-label">
+
+                                            {{ ucfirst(str_replace('_', ' ', $doc->document_type)) }}
+
+                                        </div>
+
+                                        @if($doc->document_type === 'poliza' && $doc->metadata)
+
+                                            <div class="doc-meta">
+
+                                                @if($doc->getMeta('aseguradora'))
+                                                    <div>
+                                                        <strong>Aseguradora:</strong>
+                                                        {{ $doc->getMeta('aseguradora') }}
+                                                    </div>
+                                                @endif
+
+                                                @if($doc->getMeta('numero'))
+                                                    <div>
+                                                        <strong>N°:</strong>
+                                                        {{ $doc->getMeta('numero') }}
+                                                    </div>
+                                                @endif
+
+                                                @if($doc->getMeta('vigencia_desde'))
+                                                    <div>
+                                                        <strong>Desde:</strong>
+                                                        {{ \Carbon\Carbon::parse($doc->getMeta('vigencia_desde'))->format('d/m/Y') }}
+                                                    </div>
+                                                @endif
+
+                                                @if($doc->getMeta('vigencia_hasta'))
+                                                    <div>
+                                                        <strong>Hasta:</strong>
+                                                        {{ \Carbon\Carbon::parse($doc->getMeta('vigencia_hasta'))->format('d/m/Y') }}
+                                                    </div>
+                                                @endif
+
+                                                @if($doc->getMeta('monto'))
+                                                    <div>
+                                                        <strong>Monto:</strong>
+                                                        ${{ number_format($doc->getMeta('monto'), 0, ',', '.') }}
+                                                    </div>
+                                                @endif
+
+                                            </div>
+
+                                        @endif
+
+                                    </div>
+
+                                </td>
+
+                            @endforeach
+
+                        </tr>
+
+                    @endforeach
+
+                </table>
+
+            </div>
+
+        </div>
+
+        @endif
+
+        <!-- COMPROBANTES -->
+        @if($contract->payments->count() > 0)
+
+        <div class="section">
+
+            <div class="section-head">
+                <span class="section-bars"></span>
+                Comprobantes de Pago
+            </div>
+
+            <div class="section-body">
+
+                <table class="docs-grid">
+
+                    @foreach($contract->payments as $payment)
+
+                        @if($payment->proof_path)
+
+                            <tr>
+
+                                @foreach($payment->proof_path as $role => $proof)
+
+                                    @php
+
+                                        $proofPath = public_path(
+                                            str_replace(
+                                                asset('/'),
+                                                '',
+                                                $proof
+                                            )
+                                        );
+
+                                        $proofData = '';
+
+                                        if (file_exists($proofPath)) {
+
+                                            $proofData = base64_encode(
+                                                file_get_contents($proofPath)
+                                            );
+                                        }
+
+                                    @endphp
+
+                                    <td class="doc-card">
+
+                                        <div class="doc-box">
+
+                                            <div class="doc-thumb">
+
+                                                @if($proofData)
+
+                                                    <img
+                                                        src="data:image/jpeg;base64,{{ $proofData }}"
+                                                        alt="Comprobante"
+                                                    >
+
+                                                @endif
+
+                                            </div>
+
+                                            <div class="doc-label">
+                                                {{ ucfirst($role) }}
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                @endforeach
+
+                            </tr>
+
+                        @endif
+
+                    @endforeach
+
+                </table>
+
+            </div>
+
+        </div>
+
+        @endif
+
+        <!-- TOKEN -->
+        <div class="section">
+
+            <div class="section-head">
+                <span class="section-bars"></span>
+                Token del Contrato
+            </div>
+
+            <div class="section-body">
+
+                <div class="token-text">
+                    Guarda este token para acceder al contrato:
+                </div>
+
+                <div class="token-box">
+                    {{ $contract->unique_token }}
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+
+            <p>
+                <strong>
+                    Actalia - Registro Digital de Contratos
+                </strong>
+            </p>
+
+            <p>
+                Documento generado el
+                {{ now()->format('d/m/Y H:i') }}
+            </p>
+
+            <p>
+                © {{ date('Y') }} Actalia - Todos los derechos reservados
+            </p>
+
+        </div>
+
     </div>
-    
-    <!-- Footer -->
-    <div class="footer">
-        <p><strong>Registrado - Registro Digital de Contratos</strong></p>
-        <p>Documento generado el {{ now()->format('d/m/Y H:i') }}</p>
-        <p>Este documento es una copia digital del contrato registrado.</p>
-        <p style="margin-top: 10px;">© {{ date('Y') }} Registrado - Todos los derechos reservados</p>
-    </div>
+
+</div>
+
 </body>
 </html>

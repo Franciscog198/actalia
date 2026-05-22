@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Información de Póliza - Registrado</title>
+    <title>Información de Póliza - Actalia</title>
     
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
@@ -398,41 +398,77 @@ body {
 
                     <div class="form-grid">
                         <div class="form-field">
-                            <div class="form-label">Empresa aseguradora</div>
-                            <select name="poliza_aseguradora" class="input-real" required>
-                                <option value="">Seleccionar compañía</option>
-                                <option value="Fianzas y Crédito" {{ old('poliza_aseguradora') == 'Fianzas y Crédito' ? 'selected' : '' }}>Fianzas y Crédito</option>
-                                <option value="Berkley" {{ old('poliza_aseguradora') == 'Berkley' ? 'selected' : '' }}>Berkley</option>
-                                <option value="Sancor Seguros" {{ old('poliza_aseguradora') == 'Sancor Seguros' ? 'selected' : '' }}>Sancor Seguros</option>
-                                <option value="La Segunda" {{ old('poliza_aseguradora') == 'La Segunda' ? 'selected' : '' }}>La Segunda</option>
-                                <option value="Otra" {{ old('poliza_aseguradora') == 'Otra' ? 'selected' : '' }}>Otra</option>
-                            </select>
-                            <div class="form-field" id="otra-aseguradora-field" style="display:none;">
-                                <div class="form-label">Nombre de la aseguradora</div>
-                                <input 
-                                    type="text" 
-                                    name="poliza_aseguradora_otra" 
-                                    value="{{ old('poliza_aseguradora_otra') }}" 
-                                    placeholder="Ingrese la aseguradora" 
-                                    class="input-real"
-                                >
+                    <div class="form-label">Empresa aseguradora</div>
+
+                    <select 
+                        name="poliza_aseguradora" 
+                        id="poliza_aseguradora"
+                        class="input-real" 
+                        required
+                    >
+                        <option value="">Seleccionar compañía</option>
+
+                        <option value="Fianzas y Crédito"
+                            {{ old('poliza_aseguradora') == 'Fianzas y Crédito' ? 'selected' : '' }}>
+                            Fianzas y Crédito
+                        </option>
+                    
+                        <option value="Berkley"
+                            {{ old('poliza_aseguradora') == 'Berkley' ? 'selected' : '' }}>
+                            Berkley
+                        </option>
+                    
+                        <option value="Sancor Seguros"
+                            {{ old('poliza_aseguradora') == 'Sancor Seguros' ? 'selected' : '' }}>
+                            Sancor Seguros
+                        </option>
+                    
+                        <option value="La Segunda"
+                            {{ old('poliza_aseguradora') == 'La Segunda' ? 'selected' : '' }}>
+                            La Segunda
+                        </option>
+                    
+                        <option value="Otra"
+                            {{ old('poliza_aseguradora') == 'Otra' ? 'selected' : '' }}>
+                            Otra
+                        </option>
+                    </select>
+                
+                    @error('poliza_aseguradora')
+                        <div class="error-text">{{ $message }}</div>
+                    @enderror
+                        </div>
+
+                        {{-- CAMPO EXTRA --}}
+                        <div 
+                            class="form-field" 
+                            id="otra-aseguradora-field"
+                            style="{{ old('poliza_aseguradora') == 'Otra' ? 'display:block;' : 'display:none;' }}"
+                        >
+                            <div class="form-label">
+                                Nombre de la aseguradora
                             </div>
-                            @error('poliza_aseguradora')
-                                <div class="error-text">{{ $message }}</div>
-                            @enderror
+                        
+                            <input 
+                                type="text"
+                                name="poliza_aseguradora_otra"
+                                value="{{ old('poliza_aseguradora_otra') }}"
+                                placeholder="Ingrese la aseguradora"
+                                class="input-real"
+                            >
                         </div>
 
                         <div class="two-col-row">
                             <div class="form-field">
                                 <div class="form-label">Número de póliza</div>
-                                <input type="text" name="poliza_numero" value="{{ old('poliza_numero') }}" placeholder="Ej. 0001234" class="input-real" required>
+                                <input type="text" name="poliza_numero" value="{{ old('poliza_numero') }}" class="input-real" required>
                                 @error('poliza_numero')
                                     <div class="error-text">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-field">
                                 <div class="form-label">Número de certificado</div>
-                                <input type="text" name="poliza_certificado" value="{{ old('poliza_certificado') }}" placeholder="Opcional" class="input-real">
+                                <input type="text" name="poliza_certificado" value="{{ old('poliza_certificado') }}" class="input-real">
                                 @error('poliza_certificado')
                                     <div class="error-text">{{ $message }}</div>
                                 @enderror
@@ -466,7 +502,7 @@ body {
 
                         <div class="form-field">
                             <div class="form-label">Nombre del tomador del seguro</div>
-                            <input type="text" name="poliza_tomador" value="{{ old('poliza_tomador') }}" placeholder="Nombre completo" class="input-real" required>
+                            <input type="text" name="poliza_tomador" value="{{ old('poliza_tomador') }}" class="input-real" required>
                             @error('poliza_tomador')
                                 <div class="error-text">{{ $message }}</div>
                             @enderror
@@ -474,7 +510,7 @@ body {
 
                         <div class="form-field">
                             <div class="form-label">Monto asegurado</div>
-                            <input type="number" name="poliza_monto" value="{{ old('poliza_monto') }}" placeholder="$ 0,00" step="0.01" class="input-real" required>
+                            <input type="number" name="poliza_monto" value="{{ old('poliza_monto') }}" step="0.01" class="input-real" required>
                             @error('poliza_monto')
                                 <div class="error-text">{{ $message }}</div>
                             @enderror

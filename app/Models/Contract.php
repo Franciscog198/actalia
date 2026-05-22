@@ -31,15 +31,7 @@ class Contract extends Model
         'metadata',
         'guarantee_type',
         'registrant_type',
-        // 🔥 POLIZA
-        'poliza_aseguradora',
-        'poliza_numero',
-        'poliza_certificado',
-        'poliza_emision',
-        'poliza_vigencia_desde',
-        'poliza_vigencia_hasta',
-        'poliza_tomador',
-        'poliza_monto',
+       
     ];
 
     protected function casts(): array
@@ -50,12 +42,6 @@ class Contract extends Model
             'monthly_rent' => 'decimal:2',
             'payment_amount' => 'decimal:2',
             'metadata' => 'array',
-
-            // 🔥 POLIZA
-            'poliza_emision' => 'date',
-            'poliza_vigencia_desde' => 'date',
-            'poliza_vigencia_hasta' => 'date',
-            'poliza_monto' => 'decimal:2',
         ];
     }
 
