@@ -1,23 +1,41 @@
 <x-guest-layout>
-    <div class="w-full max-w-md mx-auto">
+    <div style="width: 100%; max-width: 400px; margin: 0 auto; padding: 2rem;">
 
-        <!-- Logo / Header -->
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-900">ACTALIA</h1>
-            <p class="text-sm text-gray-500">Acceso al panel de administración</p>
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <img 
+                src="{{ asset('assets/images/actalia.png') }}" 
+                alt="Actalia" 
+                style="width: 20%; height: auto; margin: 0 auto 1rem; display: block;"
+            >
+            <h1 style="font-size: 1.5rem; font-weight: 700; color: #0b2340; margin: 0; margin-bottom: 0.5rem;">
+                ACTALIA
+            </h1>
+            <p style="font-size: 0.875rem; color: #6b7280; margin: 0;">
+                Acceso al panel de administración
+            </p>
         </div>
 
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+        <!-- Errores Sesión -->
+        @if ($errors->any())
+            <div style="background-color: #fee2e2; border: 1px solid #fecaca; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.875rem;">
+                <strong>Error de acceso</strong>
+                @foreach ($errors->all() as $error)
+                    <p style="margin: 0.25rem 0;">{{ $error }}</p>
+                @endforeach
+            </div>
+        @endif
 
-        <form method="POST" action="{{ route('login') }}" class="bg-white p-6 rounded-xl shadow-md space-y-5">
+        <!-- Formulario -->
+        <form method="POST" action="{{ route('login') }}" style="display: flex; flex-direction: column; gap: 1.5rem;">
             @csrf
 
             <!-- Email -->
             <div>
-                <x-input-label for="email" value="Correo electrónico" class="text-sm font-medium text-gray-700" />
-
-                <x-text-input
+                <label for="email" style="display: block; font-size: 0.875rem; font-weight: 600; color: #0b2340; margin-bottom: 0.5rem;">
+                    Correo electrónico
+                </label>
+                <input
                     id="email"
                     type="email"
                     name="email"
@@ -25,67 +43,56 @@
                     required
                     autofocus
                     autocomplete="username"
-                    class="block mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                />
-
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    placeholder="tu@email.com"
+                    style="width: 100%; background-color: #e5e7eb; border: 1px solid #d1d5db; color: #0b2340; border-radius: 0.5rem; padding: 0.75rem; font-size: 1rem;"
+                >
             </div>
 
-            <!-- Password -->
+            <!-- Contraseña -->
             <div>
-                <x-input-label for="password" value="Contraseña" class="text-sm font-medium text-gray-700" />
-
-                <x-text-input
+                <label for="password" style="display: block; font-size: 0.875rem; font-weight: 600; color: #0b2340; margin-bottom: 0.5rem;">
+                    Contraseña
+                </label>
+                <input
                     id="password"
                     type="password"
                     name="password"
                     required
                     autocomplete="current-password"
-                    class="block mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                />
-
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
-            </div>
-
-            <!-- Remember + Forgot -->
-            <div class="flex items-center justify-between">
-
-                <label class="flex items-center gap-2 text-sm text-gray-600">
-                    <input
-                        type="checkbox"
-                        name="remember"
-                        class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    >
-                    Recordarme
-                </label>
-
-                @if (Route::has('password.request'))
-                    <a
-                        href="{{ route('password.request') }}"
-                        class="text-sm text-indigo-600 hover:text-indigo-800 transition"
-                    >
-                        ¿Olvidaste tu contraseña?
-                    </a>
-                @endif
-
-            </div>
-
-            <!-- Button -->
-            <div>
-                <button
-                    type="submit"
-                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition shadow-sm"
+                    placeholder="••••••••"
+                    style="width: 100%; background-color: #e5e7eb; border: 1px solid #d1d5db; color: #0b2340; border-radius: 0.5rem; padding: 0.75rem; font-size: 1rem;"
                 >
-                    Iniciar sesión
-                </button>
             </div>
+
+            <!-- Recordarme -->
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <input
+                    type="checkbox"
+                    id="remember"
+                    name="remember"
+                    style="width: 1rem; height: 1rem; cursor: pointer;"
+                >
+                <label for="remember" style="font-size: 0.875rem; color: #6b7280; cursor: pointer; margin: 0;">
+                    Recordarme en este dispositivo
+                </label>
+            </div>
+
+            <!-- Botón -->
+            <button
+                type="submit"
+                style="width: 100%; background-color: #0a5faa; color: white; border: none; font-weight: 600; padding: 0.875rem; border-radius: 0.5rem; cursor: pointer; font-size: 1rem; transition: background-color 0.2s;"
+                onmouseover="this.style.backgroundColor='#084c88'"
+                onmouseout="this.style.backgroundColor='#0a5faa'"
+            >
+                Iniciar sesión
+            </button>
 
         </form>
 
         <!-- Footer -->
-        <p class="text-center text-xs text-gray-400 mt-6">
-            © {{ date('Y') }} ACTALIA · Sistema de gestión
-        </p>
+        <div style="text-align: center; margin-top: 2rem; font-size: 0.75rem; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 1.5rem;">
+            <p style="margin: 0;">© {{ date('Y') }} ACTALIA · Sistema de registro digital</p>
+        </div>
 
     </div>
 </x-guest-layout>

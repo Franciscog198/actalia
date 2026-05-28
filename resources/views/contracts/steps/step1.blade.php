@@ -58,7 +58,7 @@ body {
 
 .app-wrapper {
     width: 100%;
-    max-width: 375px;
+    max-width: 600px;
     min-height: 100vh;
     margin: 0 auto;
     display: flex;
@@ -515,7 +515,7 @@ body {
 
                         <div class="form-field">
                             <div class="form-label">Alquiler mensual (opcional)</div>
-                            <input type="number" name="monthly_rent" value="{{ old('monthly_rent') }}" step="0.01" placeholder="150000" class="input-real">
+                            <input type="text" name="monthly_rent" value="{{ old('monthly_rent') }}" class="input-real money-input">
                             @error('monthly_rent')
                                 <div class="error-text">{{ $message }}</div>
                             @enderror
@@ -602,6 +602,32 @@ body {
             
             document.getElementById('end_date').value = endDate.toISOString().split('T')[0];
             document.getElementById('end_date').min = this.value;
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+        
+            const moneyInputs = document.querySelectorAll('.money-input');
+        
+            moneyInputs.forEach(input => {
+            
+                input.addEventListener('input', function (e) {
+                
+                    let value = e.target.value;
+                
+                    value = value.replace(/\./g, '');
+                    value = value.replace(/\D/g, '');
+                
+                    if (value === '') {
+                        e.target.value = '';
+                        return;
+                    }
+                
+                    e.target.value = Number(value)
+                        .toLocaleString('es-AR');
+                });
+            
+            });
+        
         });
     </script>
 </body>

@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PaymentReceivedNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class PaymentController extends Controller
 {
@@ -48,6 +50,41 @@ class PaymentController extends Controller
             
             /**
              * =====================================
+             * STORAGE LARAVEL
+             * =====================================
+             */
+            $laravelPath = storage_path(
+                'app/public/' . $path
+            );
+            
+            if (!file_exists($laravelPath)) {
+                mkdir($laravelPath, 0777, true);
+            }
+
+            /**
+             * =====================================
+             * PUBLIC_HTML
+             * =====================================
+             */
+            $publicHtmlPath = base_path(
+                '../public_html/app/storage/' . $path
+            );
+            
+            if (!file_exists($publicHtmlPath)) {
+                mkdir($publicHtmlPath, 0777, true);
+            }
+
+            /**
+             * =====================================
+             * IMAGE MANAGER
+             * =====================================
+             */
+            $manager = new ImageManager(
+                new Driver()
+            );
+            
+            /**
+             * =====================================
              * LOCADOR
              * =====================================
              */
@@ -59,38 +96,43 @@ class PaymentController extends Controller
                 uniqid() .
                 '.' .
                 $fileLocador->getClientOriginalExtension();
-            
+
             /**
-             * =====================================
-             * STORAGE LARAVEL
-             * =====================================
+             * MIME
              */
-            $laravelPath = storage_path(
-                'app/public/' . $path
-            );
-            
-            if (!file_exists($laravelPath)) {
-                mkdir($laravelPath, 0777, true);
+            $mimeLocador = $fileLocador->getMimeType();
+
+            /**
+             * SI ES IMAGEN
+             */
+            if (str_starts_with($mimeLocador, 'image/')) {
+
+                $imageLocador = $manager
+                    ->read($fileLocador->getRealPath())
+                    ->scale(width: 1400)
+                    ->toJpeg(80);
+
+                file_put_contents(
+                    $laravelPath . '/' . $filenameLocador,
+                    (string) $imageLocador
+                );
+
+            } else {
+
+                /**
+                 * SI ES PDF
+                 */
+                $fileLocador->move(
+                    $laravelPath,
+                    $filenameLocador
+                );
             }
-            
-            $fileLocador->move(
-                $laravelPath,
-                $filenameLocador
-            );
             
             /**
              * =====================================
              * DUPLICAR EN PUBLIC_HTML
              * =====================================
              */
-            $publicHtmlPath = base_path(
-                '../public_html/app/storage/' . $path
-            );
-            
-            if (!file_exists($publicHtmlPath)) {
-                mkdir($publicHtmlPath, 0777, true);
-            }
-            
             copy(
                 $laravelPath . '/' . $filenameLocador,
                 $publicHtmlPath . '/' . $filenameLocador
@@ -118,14 +160,37 @@ class PaymentController extends Controller
                 uniqid() .
                 '.' .
                 $fileLocatario->getClientOriginalExtension();
-            
+
             /**
-             * STORAGE LARAVEL
+             * MIME
              */
-            $fileLocatario->move(
-                $laravelPath,
-                $filenameLocatario
-            );
+            $mimeLocatario = $fileLocatario->getMimeType();
+
+            /**
+             * SI ES IMAGEN
+             */
+            if (str_starts_with($mimeLocatario, 'image/')) {
+
+                $imageLocatario = $manager
+                    ->read($fileLocatario->getRealPath())
+                    ->scale(width: 1400)
+                    ->toJpeg(80);
+
+                file_put_contents(
+                    $laravelPath . '/' . $filenameLocatario,
+                    (string) $imageLocatario
+                );
+
+            } else {
+
+                /**
+                 * SI ES PDF
+                 */
+                $fileLocatario->move(
+                    $laravelPath,
+                    $filenameLocatario
+                );
+            }
             
             /**
              * DUPLICAR EN PUBLIC_HTML
@@ -143,6 +208,7 @@ class PaymentController extends Controller
                 $path .
                 '/' .
                 $filenameLocatario;
+
             /**
              * =====================================
              * CREAR PAGO

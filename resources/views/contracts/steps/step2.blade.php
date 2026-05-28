@@ -58,7 +58,7 @@ body {
 
 .app-wrapper {
     width: 100%;
-    max-width: 375px;
+    max-width: 600px;
     min-height: 100vh;
     margin: 0 auto;
     display: flex;

@@ -62,15 +62,6 @@ return new class extends Migration
             $table->index('payment_status');
             $table->index('created_at');
 
-            //Poliza de garantia
-            $table->string('poliza_aseguradora')->nullable();
-            $table->string('poliza_numero')->nullable();
-            $table->string('poliza_certificado')->nullable();
-            $table->date('poliza_emision')->nullable();
-            $table->date('poliza_vigencia_desde')->nullable();
-            $table->date('poliza_vigencia_hasta')->nullable();
-            $table->string('poliza_tomador')->nullable();
-            $table->decimal('poliza_monto', 12, 2)->nullable();
         });
     }
 

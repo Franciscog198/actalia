@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Realizar Pago - Registrado</title>
     
-    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+    
     <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
     
     <style>
@@ -460,6 +460,47 @@
         .link-btn:hover {
             background-color: #96d129;
         }
+
+        /* SPINNER STYLES */
+        .spinner-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .spinner-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #0a5faa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner-text {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -500,7 +541,7 @@
 
                         <div class="qr-container">
                             <div class="qr-code">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ urlencode('https://link.mercadopago.com.ar/registrado') }}" alt="QR Locador">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ urlencode('https://link.mercadopago.com.ar/actalia') }}" alt="QR Locador">
                             </div>
                             <div style="text-align: center;">
                                 <div style="font-size: 14px; font-weight: 600; color: var(--foreground); margin-bottom: 8px;">
@@ -512,7 +553,7 @@
                             </div>
                         </div>
 
-                        <a href="https://link.mercadopago.com.ar/registrado" target="_blank" class="link-btn">
+                        <a href="https://link.mercadopago.com.ar/actalia" target="_blank" class="link-btn">
                             <iconify-icon icon="lucide:external-link" style="font-size: 18px;"></iconify-icon>
                             Abrir link de pago
                         </a>
@@ -640,7 +681,7 @@
                         <li class="info-item">
                             <iconify-icon icon="lucide:clock"></iconify-icon>
                             <div class="info-text">
-                                Los pagos serán verificados en un plazo de 72 horas hábiles
+                                Los pagos serán verificados en un plazo de 48 horas hábiles
                             </div>
                         </li>
                     </ul>
@@ -653,75 +694,98 @@
             </form>
         </main>
     </div>
-
-    <script>
-        function toggleAccordion(type) {
-            const body = document.getElementById('body-' + type);
-            const chevron = document.getElementById('chevron-' + type);
-            const header = event.currentTarget;
-
-            // Toggle open/close
-            body.classList.toggle('open');
-            chevron.classList.toggle('rotated');
-            header.classList.toggle('active');
-        }
-
-        function copyAlias() {
-            const alias = document.getElementById('aliasValue').textContent;
-            navigator.clipboard.writeText(alias).then(() => {
-                alert('✓ Alias copiado: ' + alias);
-            });
-        }
-
-        function showPreview(input, previewId) {
-            const preview = document.getElementById(previewId);
-            preview.innerHTML = '';
-
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    const div = document.createElement('div');
-                    div.className = 'preview-item';
-                    
-                    if (file.type.startsWith('image/')) {
-                        div.innerHTML = `
-                            <img src="${e.target.result}" alt="Comprobante">
-                            <button type="button" class="preview-remove" onclick="removePreview('${input.id}', '${previewId}')">✕</button>
-                        `;
-                    } else {
-                        div.innerHTML = `
-                            <div style="padding: 20px; text-align: center;">
-                                <iconify-icon icon="lucide:file-text" style="font-size: 48px; color: var(--primary);"></iconify-icon>
-                                <div style="margin-top: 8px; font-size: 12px;">PDF adjunto</div>
-                            </div>
-                            <button type="button" class="preview-remove" onclick="removePreview('${input.id}', '${previewId}')">✕</button>
-                        `;
+    <!-- SPINNER OVERLAY -->
+        <div id="spinnerOverlay" class="spinner-overlay">
+            <div class="spinner"></div>
+            <div class="spinner-text">Procesando pagos...<br><small style="font-size: 12px; margin-top: 8px; opacity: 0.8;">Por favor espera</small></div>
+        </div>
+    
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const paymentForm = document.getElementById('paymentForm');
+                const spinnerOverlay = document.getElementById('spinnerOverlay');
+                const submitBtn = document.getElementById('submitBtn');
+                
+                // Mostrar spinner al enviar
+                paymentForm.addEventListener('submit', function(e) {
+                    if (!submitBtn.disabled) {
+                        spinnerOverlay.classList.add('active');
+                        submitBtn.disabled = true;
                     }
-                    
-                    preview.appendChild(div);
-                };
-
-                reader.readAsDataURL(file);
-                checkSubmitButton();
-            }
-        }
-
-        function removePreview(inputId, previewId) {
-            document.getElementById(inputId).value = '';
-            document.getElementById(previewId).innerHTML = '';
-            checkSubmitButton();
-        }
-
-        function checkSubmitButton() {
-            const locadorFile = document.getElementById('comprobanteLocador').files.length > 0;
-            const locatarioFile = document.getElementById('comprobanteLocatario').files.length > 0;
-            const submitBtn = document.getElementById('submitBtn');
+                });
             
-            submitBtn.disabled = !(locadorFile && locatarioFile);
-        }
-    </script>
+                function toggleAccordion(type) {
+                    const body = document.getElementById('body-' + type);
+                    const chevron = document.getElementById('chevron-' + type);
+                
+                    body.classList.toggle('open');
+                    chevron.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            
+                function copyAlias() {
+                    const alias = 'REGISTRADO.DIGITAL';
+                    navigator.clipboard.writeText(alias).then(() => {
+                        alert('✓ Alias copiado: ' + alias);
+                    });
+                }
+            
+                function showPreview(input, previewId) {
+                    const preview = document.getElementById(previewId);
+                    preview.innerHTML = '';
+                
+                    if (input.files && input.files[0]) {
+                        const file = input.files[0];
+                        const reader = new FileReader();
+                    
+                        reader.onload = function(e) {
+                            const div = document.createElement('div');
+                            div.className = 'preview-item';
+                            
+                            if (file.type.startsWith('image/')) {
+                                div.innerHTML = `
+                                    <img src="${e.target.result}" alt="Comprobante">
+                                    <button type="button" class="preview-remove" onclick="window.removePreview('${input.id}', '${previewId}')">✕</button>
+                                `;
+                            } else {
+                                div.innerHTML = `
+                                    <div style="padding: 20px; text-align: center;">
+                                        <iconify-icon icon="lucide:file-text" style="font-size: 48px; color: var(--primary);"></iconify-icon>
+                                        <div style="margin-top: 8px; font-size: 12px;">PDF adjunto</div>
+                                    </div>
+                                    <button type="button" class="preview-remove" onclick="window.removePreview('${input.id}', '${previewId}')">✕</button>
+                                `;
+                            }
+                            
+                            preview.appendChild(div);
+                        };
+                    
+                        reader.readAsDataURL(file);
+                        checkSubmitButton();
+                    }
+                }
+            
+                function removePreview(inputId, previewId) {
+                    document.getElementById(inputId).value = '';
+                    document.getElementById(previewId).innerHTML = '';
+                    checkSubmitButton();
+                }
+            
+                function checkSubmitButton() {
+                    const locadorFile = document.getElementById('comprobanteLocador').files.length > 0;
+                    const locatarioFile = document.getElementById('comprobanteLocatario').files.length > 0;
+                    const submitBtn = document.getElementById('submitBtn');
+                    
+                    submitBtn.disabled = !(locadorFile && locatarioFile);
+                }
+            
+                // Exponer funciones globales
+                window.toggleAccordion = toggleAccordion;
+                window.copyAlias = copyAlias;
+                window.showPreview = showPreview;
+                window.removePreview = removePreview;
+                window.checkSubmitButton = checkSubmitButton;
+            });
+        </script>
 </body>
 </html>
 </x-guest-layout>

@@ -32,5 +32,14 @@
                 {{ $slot }}
             </main>
         </div>
+        <script>
+            // Ocultar spinner cuando se carga la página completamente
+            window.addEventListener('load', function() {
+                const spinner = document.getElementById('spinnerOverlay');
+                if (spinner) {
+                    spinner.classList.remove('active');
+                }
+            });
+        </script>
     </body>
 </html>

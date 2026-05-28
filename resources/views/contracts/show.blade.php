@@ -93,7 +93,7 @@
         }
 
         .logo {
-            width: 180px;
+            width: 100%;
             height: auto;
             display: block;
         }
@@ -567,7 +567,7 @@
         }
 
         .footer-logo img {
-            width: 92px;
+            width: 100%;
             height: auto;
             display: block;
         }

@@ -309,6 +309,11 @@
             background-color: #083d6e;
         }
 
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         .btn-secondary {
             width: 100%;
             border-radius: var(--radius-lg);
@@ -402,6 +407,47 @@
             background-color: #d1fae5;
             color: #065f46;
             border: 1px solid #a7f3d0;
+        }
+
+        /* Spinner */
+        .spinner-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .spinner-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #0a5faa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner-text {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            text-align: center;
         }
     </style>
 </head>
@@ -572,6 +618,15 @@
         </footer>
             </form>
     </div>
+    <div id="spinnerOverlay" class="spinner-overlay">
+        <div class="spinner"></div>
+        <div class="spinner-text">
+            Subiendo documentos...<br>
+            <small style="opacity:.8;font-size:13px;">
+                Esto puede tardar unos segundos
+            </small>
+        </div>
+    </div>
 
     <script>
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
@@ -678,6 +733,31 @@
             updateInputFiles(input, filesStorage.contrato_firmado);
             showContractPages();
         }
+
+        // ACTIVAR SPINNER AL ENVIAR
+        const uploadForm = document.getElementById('uploadForm');
+        const spinnerOverlay = document.getElementById('spinnerOverlay');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (uploadForm) {
+
+            uploadForm.addEventListener('submit', function () {
+
+                // Mostrar spinner
+                spinnerOverlay.classList.add('active');
+
+                // Deshabilitar botón
+                submitBtn.disabled = true;
+
+                // Cambiar texto
+                submitBtn.innerHTML = `
+                    <span>Subiendo...</span>
+                `;
+
+            });
+
+        }
+
     </script>
 </body>
 </html>

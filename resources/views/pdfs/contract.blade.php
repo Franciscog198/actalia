@@ -67,7 +67,8 @@
         .logo {
             max-width: 120px;
             height: auto;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            margin-top: 20px;
         }
 
         .title {
@@ -346,6 +347,10 @@
             line-height: 1.6;
         }
 
+        .documents-section{
+            padding-top: 45px;
+        }
+
     </style>
 </head>
 <body>
@@ -359,11 +364,26 @@
 
             @php
                 $logoPath = public_path('assets/images/actalia.png');
+                $logoData = '';
+
+                if (file_exists($logoPath)) {
+                    $logoData = base64_encode(file_get_contents($logoPath));
+                }
             @endphp
 
-            @if(file_exists($logoPath))
-                <img src="{{ $logoPath }}" alt="Logo" class="logo">
-            @endif
+            <div class="logo-wrap">
+                @if($logoData)
+                    <img
+                        class="logo"
+                        src="data:image/png;base64,{{ $logoData }}"
+                        alt="Actalia"
+                    >
+                @else
+                    <div style="width: 120px; height: 120px; background: #f0f0f0; margin-bottom: 15px;">
+                        [Logo no disponible]
+                    </div>
+                @endif
+            </div>
 
             <h1 class="title">
                 Contrato Registrado
@@ -555,9 +575,9 @@
         <!-- DOCUMENTOS -->
         @if($contract->documents->count() > 0)
 
-        <div class="section">
+        <div class="section documents-section">
 
-            <div class="section-head">
+            <div class="section-head documents-title">
                 <span class="section-bars"></span>
                 Documentos e Imágenes ({{ $contract->documents->count() }})
             </div>

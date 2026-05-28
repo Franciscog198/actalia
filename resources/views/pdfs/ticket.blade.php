@@ -36,8 +36,9 @@
         }
 
         .logo {
-            width: 130px;
-            margin-bottom: 18px;
+            width: 60px;
+            margin-bottom: 8px;
+            margin-top: 20px;
         }
 
         .title {
@@ -196,12 +197,28 @@
     {{-- HEADER --}}
     <div class="header">
 
-        @if(file_exists(public_path('assets/images/actalia.png')))
-            <img
-                class="logo"
-                src="{{ public_path('assets/images/actalia.png') }}"
-                alt="Actalia">
-        @endif
+        @php
+            $logoPath = public_path('assets/images/actalia.png');
+            $logoData = '';
+            
+            if (file_exists($logoPath)) {
+                $logoData = base64_encode(file_get_contents($logoPath));
+            }
+        @endphp
+        
+        <div class="logo-wrap">
+            @if($logoData)
+                <img
+                    class="logo"
+                    src="data:image/png;base64,{{ $logoData }}"
+                    alt="Actalia"
+                >
+            @else
+                <div style="width: 120px; height: 120px; background: #f0f0f0; margin-bottom: 15px;">
+                    [Logo no disponible]
+                </div>
+            @endif
+        </div>
 
         <div class="title">
             Constancia de Registro

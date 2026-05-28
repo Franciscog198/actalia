@@ -6,6 +6,8 @@ use App\Models\Contract;
 use App\Models\ContractDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class DocumentUploadController extends Controller
 {
@@ -160,10 +162,29 @@ class DocumentUploadController extends Controller
          * storage/app/public/contracts/...
          * =====================================
          */
-        $storedPath = $file->storeAs(
-            $path,
-            $filename,
-            'public'
+        $storedPath = $path . '/' . $filename;
+
+        /**
+         * =====================================
+         * REDIMENSIONAR IMAGEN
+         * =====================================
+         */
+        $manager = new ImageManager(
+        new Driver()
+        );
+
+        $image = $manager
+            ->read($file->getRealPath())
+            ->scale(width: 1400)
+            ->toJpeg(80);
+        /**
+         * =====================================
+         * GUARDAR ARCHIVO
+         * =====================================
+         */
+        Storage::disk('public')->put(
+            $storedPath,
+            (string) $image
         );
 
         /**

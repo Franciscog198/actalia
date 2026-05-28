@@ -33,14 +33,6 @@ class ContractWizardController extends Controller
             // Guardar en sesión (aunque ya se guarda luego en el merge)
             Session::put('registrant_type', $validated['registrant_type']);
     
-            // OPCIONAL: crear contrato desde el inicio
-            // ⚠️ Solo si tu lógica lo requiere
-            // $contract = \App\Models\Contract::create([
-            //     'registrant_type' => $validated['registrant_type'],
-            // ]);
-    
-            // También podrías guardar el ID en sesión
-            // Session::put('contract_id', $contract->id);
         }
 
 
@@ -139,20 +131,20 @@ class ContractWizardController extends Controller
             case '3b':
                     
             $data = $request->validate([
-                'poliza_aseguradora' => 'required|string|max:255',
+                'poliza_aseguradora' => 'nullable|string|max:255',
                 'poliza_aseguradora_otra' => 'nullable|string|max:255',
                     
-                'poliza_numero' => 'required|string|max:255',
+                'poliza_numero' => 'nullable|string|max:255',
                 'poliza_certificado' => 'nullable|string|max:255',
                     
-                'poliza_emision' => 'required|date',
+                'poliza_emision' => 'nullable|date',
                     
-                'poliza_vigencia_desde' => 'required|date',
-                'poliza_vigencia_hasta' => 'required|date|after:poliza_vigencia_desde',
+                'poliza_vigencia_desde' => 'nullable|date',
+                'poliza_vigencia_hasta' => 'nullable|date|after:poliza_vigencia_desde',
                     
-                'poliza_tomador' => 'required|string|max:255',
+                'poliza_tomador' => 'nullable|string|max:255',
                     
-                'poliza_monto' => 'required|numeric|min:0',
+                'poliza_monto' => 'nullable|numeric|min:0',
                     
                 'poliza_documento' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
             ]);

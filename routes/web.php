@@ -71,19 +71,6 @@ Route::get('/contract/{token}/ticket', [PaymentController::class, 'downloadTicke
     ->name('payment.ticket');
 
 
-// Rutas de Admin (protegidas por middleware auth y admin)
-//Route::middleware(['auth'])->prefix('admin')->group(function () {
-//    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-//    Route::get('/contracts/{id}', [AdminController::class, 'show'])->name('admin.contract.show');
-//    Route::post('/contracts/{id}/approve', [AdminController::class, 'approve'])->name('admin.contract.approve');
-//    Route::post('/contracts/{id}/reject', [AdminController::class, 'reject'])->name('admin.contract.reject');
-//    Route::post('/payments/{id}/verify', [AdminController::class, 'verifyPayment'])->name('admin.payment.verify');
-//    Route::post('/payments/{id}/reject', [AdminController::class, 'rejectPayment'])->name('admin.payment.reject');
-//    Route::get('/contracts/{id}/copy-link', [AdminController::class, 'copyLink'])->name('admin.contract.copyLink');
-//});    
-
-
-
 // Rutas de Admin CON AUTH
 //Route::middleware(['auth'])->prefix('admin')->group(function () {
 require __DIR__.'/auth.php';

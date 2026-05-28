@@ -135,79 +135,68 @@
                 </h2>
 
                 @foreach($contract->payments as $payment)
-
                     <div class="border rounded-lg p-4 mb-4">
-
                         <div class="flex justify-between items-start mb-4">
-
                             <div>
-
                                 <p class="font-semibold">
                                     {{ $payment->payer_type == 'locador' ? 'Locador' : 'Locatario' }}
                                 </p>
-
                                 <p class="text-2xl font-bold text-gray-900">
                                     ${{ number_format($payment->amount, 2) }}
                                 </p>
-
                             </div>
-
                         </div>
 
                         @if($payment->proof_path && is_array($payment->proof_path))
 
-    <div class="mb-4 flex flex-wrap gap-4">
-
-        @foreach($payment->proof_path as $proof)
-
-            @php
-                $extension = strtolower(pathinfo($proof, PATHINFO_EXTENSION));
-            @endphp
-
-            <div class="w-40">
-
-                @if(in_array($extension, ['jpg', 'jpeg', 'png', 'webp']))
-
-                    <div
-                        class="cursor-pointer"
-                        onclick="openModal('{{ asset('storage/' . $proof) }}')"
-                    >
-
-                        <div class="overflow-hidden rounded-lg border bg-gray-100">
-
-                            <img
-                                src="{{ asset('storage/' . $proof) }}"
-                                alt="Comprobante"
-                                class="w-full h-40 object-cover"
-                            >
-
-                        </div>
-
-                        <div class="text-xs text-gray-600 mt-2 text-center">
-                            Comprobante
-                        </div>
-
-                    </div>
-
-                @elseif($extension === 'pdf')
-
-                    <a
-                        href="{{ asset('storage/' . $proof) }}"
-                        target="_blank"
-                        class="flex items-center justify-center h-40 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700"
-                    >
-                        Ver PDF
-                    </a>
-
-                @endif
-
-            </div>
-
-        @endforeach
-
-    </div>
-
-@endif
+                            <div class="mb-4 flex flex-wrap gap-4"> 
+                                @foreach($payment->proof_path as $proof)                            
+                                    @php
+                                        $extension = strtolower(pathinfo($proof, PATHINFO_EXTENSION));
+                                    @endphp
+                                    <div class="w-40">                                  
+                                        @if(in_array($extension, ['jpg', 'jpeg', 'png', 'webp']))
+                                  
+                                            <div
+                                                class="cursor-pointer"
+                                                onclick="openModal('{{ asset('storage/' . $proof) }}')"
+                                            >
+                                    
+                                                <div class="overflow-hidden rounded-lg border bg-gray-100">
+                                                
+                                                    <img
+                                                        src="{{ asset('storage/' . $proof) }}"
+                                                        alt="Comprobante"
+                                                        class="w-full h-40 object-cover"
+                                                    >
+                                                
+                                                </div>
+                                            
+                                                <div class="text-xs text-gray-600 mt-2 text-center">
+                                                    Comprobante
+                                                </div>
+                                            
+                                            </div>
+                                        
+                                        @elseif($extension === 'pdf')
+                                        
+                                            <a
+                                                href="{{ asset('storage/' . $proof) }}"
+                                                target="_blank"
+                                                class="flex items-center justify-center h-40 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700"
+                                            >
+                                                Ver PDF
+                                            </a>
+                                        
+                                        @endif
+                                        
+                                    </div>
+                                
+                                @endforeach
+                                
+                            </div>
+                        
+                        @endif
 
                     </div>
 

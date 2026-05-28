@@ -57,7 +57,7 @@
         }
         .screen-container {
           width: 100%;
-          max-width: 375px;
+          max-width: 600px;
           min-height: 812px;
           background-color: #ffffff;
           position: relative;
@@ -192,8 +192,8 @@
 
         /* Botón Principal Destacado */
         .btn-primary {
-          background-color: var(--accent-lime);
-          color: var(--primary);
+          background-color: var(--primary);
+          color: white;
           width: 100%;
           height: 60px;
           border-radius: var(--radius-lg);
@@ -206,7 +206,7 @@
           letter-spacing: 0.01em;
           position: relative;
           overflow: hidden;
-          box-shadow: 0 4px 12px rgba(126, 242, 157, 0.3);
+          box-shadow: 0 4px 12px rgba(20, 25, 68, 0.3);
         }
         .btn-primary::after {
           content: "";
@@ -242,28 +242,20 @@
           <div class="logo-box">
             <div class="logo-icon">
               <!-- Recreación del logo Actalia en SVG -->
-              <svg
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M 25 80 L 50 20 L 75 80 L 55 80 L 40 45"
-                  stroke="var(--accent-lime)"
-                  stroke-width="12"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </svg>
+              <img 
+                src="{{ asset('assets/images/actalia.png') }}" 
+                alt="Actalia" 
+                style="width: 100%; height: auto; margin: 0 auto 1rem; display: block;"
+            >
             </div>
-            <h1 class="logo-text">actalia</h1>
+            <h2 class="logo-text">ACTALIA</h2>
           </div>
           <h2 class="logo-subtext">Registro Digital de Contratos</h2>
         </div>
 
         <!-- Tarjeta de Contenido / Bienvenida -->
         <div class="onboarding-card">
-          <div class="card-icon-wrapper">
+          <!--<div class="card-icon-wrapper">
             <div
               style="
                 width: 28px;
@@ -278,7 +270,7 @@
                 style="font-size: 28px; color: var(--accent-lime-dark)"
               ></iconify-icon>
             </div>
-          </div>
+          </div>-->
 
           <h3 class="card-title">Registro Digital de contrato de alquiler</h3>
           <p class="card-desc">
@@ -294,7 +286,13 @@
                       Acepto los Términos y Condiciones. Entiendo que Actalia no es una
                       escribanía, no certifica firmas ni garantiza la validez legal del
                       contrato, y que el registro es una constancia digital.
-                      <span class="terms-link">[Ver términos completos]</span>
+                      <a 
+                          href="https://actalia.com.ar/terminos.html"
+                          target="_blank"
+                          class="terms-link"
+                      >
+                          [Ver términos completos]
+                      </a>
                   </span>
               </label>
           </div>
@@ -311,11 +309,12 @@
                             display: flex;
                             align-items: center;
                             justify-content: center;
+                            color: white;
                         "
                     >
                         <iconify-icon
                             icon="lucide:arrow-right"
-                            style="font-size: 20px; color: var(--primary)"
+                            style="font-size: 20px; color: white"
                         ></iconify-icon>
                     </div>
                 </div>
@@ -330,7 +329,7 @@
               
                 <!-- Botón Email -->
                 <a
-                  href="mailto:admin@actalia.com.ar?subject=Recuperar%20link%20de%20contrato&body=Hola%2C%20quiero%20recuperar%20mi%20link%20de%20contrato.%0A%0AGracias."
+                  href="mailto:contacto@actalia.com.ar?subject=Recuperar%20link%20de%20contrato&body=Hola%2C%20quiero%20recuperar%20mi%20link%20de%20contrato.%0A%0AGracias."
                   class="btn-secondary"
                   data-media-type="banani-button"
                   style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none;"
@@ -343,7 +342,7 @@
               
                 <!-- Botón WhatsApp -->
                 <a
-                  href="https://wa.me/11567845821?text=Hola%2C%20quiero%20recuperar%20mi%20link%20de%20contrato."
+                  href="https://wa.me/+5491160376749?text=Hola%2C%20quiero%20recuperar%20mi%20link%20de%20contrato."
                   class="btn-secondary"
                   data-media-type="banani-button"
                   style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none;"
